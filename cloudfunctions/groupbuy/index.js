@@ -463,6 +463,7 @@ const actions = {
     const p = await getParticipant(event.participant_id)
     const gb = await getGB(p.group_buy_id)
     mustInitiator(gb, openid)
+    assertActive(gb)
     assert(p.pay_status === 'paid_pending', '该记录不是"待确认"状态')
     await db.collection('participants').doc(p._id).update({
       data: { pay_status: 'confirmed', confirmed_at: Date.now() }
@@ -474,6 +475,7 @@ const actions = {
   async confirmAllPay(event, openid) {
     const gb = await getGB(event.group_buy_id)
     mustInitiator(gb, openid)
+    assertActive(gb)
     const res = await db.collection('participants')
       .where({ group_buy_id: gb._id, pay_status: 'paid_pending' })
       .update({ data: { pay_status: 'confirmed', confirmed_at: Date.now() } })
@@ -485,6 +487,7 @@ const actions = {
     const p = await getParticipant(event.participant_id)
     const gb = await getGB(p.group_buy_id)
     mustInitiator(gb, openid)
+    assertActive(gb)
     assert(p.pay_status === 'paid_pending', '该记录不是"待确认"状态')
     await db.collection('participants').doc(p._id).update({
       data: {
