@@ -133,22 +133,45 @@ async function notifyAllParticipants(gb, type, subKey, thing2) {
   return openids.length
 }
 
+/**
+ * 读取用户文档：优先 _id = openid 的确定性主键新格式；
+ * 兼容旧"自动 _id + openid 字段"格式，命中后尽力迁移到新主键。
+ */
+async function getUser(openid) {
+  const ref = db.collection('users').doc(openid)
+  const direct = await ref.get().catch(() => null)
+  if (direct && direct.data) return direct.data
+  const legacy = await db.collection('users').where({ openid }).get().catch(() => ({ data: [] }))
+  if (!legacy.data.length) return null
+  const old = legacy.data[0]
+  const migrated = Object.assign({}, old)
+  delete migrated._id
+  await ref.set({ data: migrated }).catch(() => {})  // 旧数据迁移，尽力而为
+  return migrated
+}
+
 async function upsertUser(openid, patch) {
-  const data = { updated_at: Date.now() }
+  const now = Date.now()
+  const data = { updated_at: now }
   if (patch.nickname) data.nickname = patch.nickname
   if (patch.avatar) data.avatar = patch.avatar
-  const exist = await db.collection('users').where({ openid }).get()
-  if (exist.data.length) {
-    await db.collection('users').doc(exist.data[0]._id).update({ data })
+  const exist = await getUser(openid)
+  if (exist) {
+    await db.collection('users').doc(openid).update({ data })
   } else {
-    await db.collection('users').add({
-      data: Object.assign({
-        openid,
-        nickname: `邻居${openid.slice(-4)}`,
-        avatar: '',
-        created_at: Date.now()
-      }, data)
-    })
+    // _id 直接用 openid：并发首次创建时 set 幂等覆盖同一文档，
+    // 消除原"先查后插"两请求同时见到空结果、各插一条的竞态
+    const user = Object.assign({
+      openid,
+      nickname: `邻居${openid.slice(-4)}`,
+      avatar: '',
+      created_at: now
+    }, data)
+    try {
+      await db.collection('users').doc(openid).set({ data: user })
+    } catch (e) {
+      await db.collection('users').doc(openid).update({ data }).catch(() => {})
+    }
   }
 }
 
@@ -186,16 +209,18 @@ const actions = {
 
   /** 获取/初始化当前用户名片 */
   async getProfile(_event, openid) {
-    const exist = await db.collection('users').where({ openid }).get()
-    if (exist.data.length) return exist.data[0]
+    const exist = await getUser(openid)
+    if (exist) return exist
+    const now = Date.now()
     const user = {
       openid,
       nickname: `邻居${openid.slice(-4)}`,
       avatar: '',
-      created_at: Date.now(),
-      updated_at: Date.now()
+      created_at: now,
+      updated_at: now
     }
-    await db.collection('users').add({ data: user })
+    // _id = openid，并发初始化时 set 幂等覆盖，不会产生重复名片
+    await db.collection('users').doc(openid).set({ data: user }).catch(() => {})
     return user
   },
 
