@@ -1,0 +1,118 @@
+<view wx:if="{{loading}}" class="empty">加载中…</view>
+
+<block wx:if="{{gb}}">
+  <view class="banner banner--red" wx:if="{{gb.status === 'cancelled'}}">
+    拼单已取消，已付款请联系发起人退款
+  </view>
+
+  <!-- 商品卡片 -->
+  <view class="card">
+    <view class="row">
+      <image class="detail-img" src="{{gb.product_image_url}}" mode="aspectFill" wx:if="{{gb.product_image_url}}"></image>
+      <view class="detail-img detail-img--placeholder" wx:else>🛒</view>
+      <view class="detail-body">
+        <view class="detail-name">{{gb.store}} · {{gb.product_name}}</view>
+        <view class="row detail-tags">
+          <text class="tag tag--{{statusView.color}}">{{statusView.label}}</text>
+          <text class="muted">{{gb.initiator_nickname}} 发起</text>
+        </view>
+        <view class="detail-price">¥{{perShareText}}<text class="detail-price__unit">/{{gb.unit}}<block wx:if="{{gb.fee_bearer === 'split'}}">（含分摊）</block></text></view>
+      </view>
+    </view>
+
+    <view class="detail-progress">
+      <view class="row-between detail-progress__text">
+        <text>已拼 <text class="strong">{{gb.sold_shares}}</text>/{{gb.total_shares}} {{gb.unit}}</text>
+        <text class="hl" wx:if="{{gb.status === 'open' && remainingShares > 0}}">剩 {{remainingShares}} {{gb.unit}}</text>
+        <text class="muted" wx:elif="{{gb.status === 'open'}}">已拼满</text>
+      </view>
+      <view class="progress"><view class="progress__inner" style="width: {{progressPct}}%"></view></view>
+    </view>
+
+    <view class="countdown" wx:if="{{gb.status === 'open'}}">
+      <text class="countdown__label">⏰ 距截单</text>
+      <text class="countdown__time">{{countdown}}</text>
+      <text class="muted">（{{deadlineText}} 截止）</text>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="detail-info"><text class="detail-info__label">📍 提货地点</text>{{gb.pickup_location}}</view>
+    <view class="detail-info" wx:if="{{gb.package_price}}"><text class="detail-info__label">📦 整包</text>¥{{packagePriceText}}/包 × {{gb.total_packages}} 包 · 每包拆 {{gb.package_shares}} {{gb.unit}}</view>
+    <view class="detail-info" wx:if="{{gb.initiator_shares > 0}}"><text class="detail-info__label">🧑‍🍳 自留</text>团长自留 {{gb.initiator_shares}} {{gb.unit}}</view>
+    <view class="detail-info" wx:if="{{gb.remark}}"><text class="detail-info__label">📝 备注</text>{{gb.remark}}</view>
+    <view class="detail-info" wx:if="{{gb.fee_bearer === 'split' && (gb.fee_express_per_share || gb.fee_package_per_share)}}"><text class="detail-info__label">💰 费用</text>快递分摊 ¥{{feeExpressText}} · 包装分摊 ¥{{feePackageText}}</view>
+    <view class="detail-info" wx:elif="{{gb.fee_bearer === 'initiator'}}"><text class="detail-info__label">💰 费用</text>快递/包装费由发起人承担</view>
+  </view>
+
+  <!-- 我的参与 -->
+  <view class="card" wx:if="{{myParticipant}}">
+    <view class="card-title">🧾 我的参与</view>
+    <view class="row-between">
+      <view>选了 <text class="strong">{{myParticipant.shares}}</text> {{gb.unit}}，应付 <text class="amount"><text class="amount__rmb">¥</text>{{myAmountText}}</text></view>
+      <text class="tag tag--{{myPayView.color}}">{{myPayView.label}}</text>
+    </view>
+    <button class="btn btn-primary go-pay-btn" wx:if="{{myParticipant.pay_status === 'unpaid' || myParticipant.pay_status === 'paid_pending'}}" bindtap="goPay">
+      {{myParticipant.pay_status === 'unpaid' ? '去付款' : '查看付款状态'}}
+    </button>
+    <view class="go-pay-tip muted" wx:if="{{myParticipant.pay_status === 'paid_pending'}}">已通知发起人确认收款</view>
+  </view>
+
+  <!-- 加入拼单：填写昵称（份数与提交在底部悬浮栏） -->
+  <view class="card" wx:if="{{canJoin}}">
+    <view class="card-title">🙋 加入拼单</view>
+    <view class="row">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
+        <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
+      </button>
+      <view class="form-item--grow">
+        <input class="input" type="nickname" placeholder="你的昵称（团长核对用）" value="{{nickname}}" bindinput="onNickname" />
+        <view class="muted join-hint">选好份数，点下方「立即拼单」</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 拼满提示 -->
+  <view class="card join-full" wx:if="{{gb.status === 'open' && !myParticipant && remainingShares <= 0 && !isInitiator}}">
+    已拼满，等团长截单啦
+  </view>
+
+  <!-- 参与名单 -->
+  <view class="card">
+    <view class="card-title">👥 参与名单（{{participants.length}}）</view>
+    <view class="empty" wx:if="{{!participants.length}}">还没有人参与，分享给邻居吧</view>
+    <view class="member" wx:for="{{participants}}" wx:key="_id">
+      <image class="avatar" src="{{item.avatar_url}}" wx:if="{{item.avatar_url}}" mode="aspectFill"></image>
+      <view class="avatar avatar--empty2" wx:else>{{item.nickname[0]}}</view>
+      <view class="member__name">{{item.nickname}}<text class="tag tag--gray member__tag" wx:if="{{item.is_initiator_row}}">团长自留</text></view>
+      <view class="member__shares">{{item.shares}} {{gb.unit}}</view>
+      <view class="member__time muted">{{item.joinedText}}</view>
+    </view>
+  </view>
+
+  <!-- 团长入口 -->
+  <view class="card" wx:if="{{isInitiator}}">
+    <button class="btn btn-green" bindtap="goManage">进入团长管理</button>
+  </view>
+</block>
+
+<!-- 底部悬浮操作栏 -->
+<view class="footer-bar" wx:if="{{gb}}">
+  <block wx:if="{{canJoin}}">
+    <view class="bar-join">
+      <view class="stepper">
+        <view class="stepper__btn {{joinShares <= 1 ? 'is-disabled' : ''}}" bindtap="onMinus">−</view>
+        <view class="stepper__num">{{joinShares}}</view>
+        <view class="stepper__btn {{joinShares >= remainingShares ? 'is-disabled' : ''}}" bindtap="onPlus">＋</view>
+      </view>
+      <view class="bar-join__amount"><text class="amount"><text class="amount__rmb">¥</text>{{joinAmountText}}</text></view>
+    </view>
+    <button class="btn btn-primary bar-btn" disabled="{{joining}}" bindtap="onJoin">立即拼单</button>
+  </block>
+  <block wx:else>
+    <button class="btn btn-plain" bindtap="copyInfo">复制拼单信息</button>
+    <button class="btn btn-primary" open-type="share">转发给邻居</button>
+  </block>
+</view>
+<view class="page-pad-bottom"></view>

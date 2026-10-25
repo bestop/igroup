@@ -1,0 +1,9 @@
+{
+  "name": "groupbuy",
+  "version": "1.0.0",
+  "description": "邻里拼单核心云函数：业务路由 + 定时截单",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

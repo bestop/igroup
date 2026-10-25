@@ -1,0 +1,111 @@
+<view wx:if="{{loading}}" class="empty">加载中…</view>
+
+<block wx:if="{{gb}}">
+  <!-- 未参与 -->
+  <view class="card empty" wx:if="{{!p}}">
+    <text class="empty__icon">🙋</text>
+    <view>你还没有参与这个拼单</view>
+    <view class="muted">先去详情页选择份数加入吧</view>
+  </view>
+
+  <block wx:if="{{p}}">
+    <view class="banner banner--red" wx:if="{{gb.status === 'cancelled'}}">
+      拼单已取消：已付款请联系发起人退款，未付款无需支付
+    </view>
+
+    <!-- 应付金额明细 -->
+    <view class="card">
+      <view class="card-title">💵 应付金额明细</view>
+      <view class="bill-row">
+        <text>商品费（{{shares}} × ¥{{perSharePriceText}}）</text>
+        <text>¥{{goodsText}}</text>
+      </view>
+      <view class="bill-row" wx:if="{{gb.fee_bearer === 'split'}}">
+        <text>分摊快递费</text>
+        <text>¥{{expressText}}</text>
+      </view>
+      <view class="bill-row" wx:if="{{gb.fee_bearer === 'split'}}">
+        <text>分摊包装费</text>
+        <text>¥{{packageText}}</text>
+      </view>
+      <view class="bill-row muted" wx:if="{{gb.fee_bearer === 'initiator'}}">
+        <text>快递/包装费</text>
+        <text>发起人承担</text>
+      </view>
+      <view class="bill-row muted" wx:if="{{gb.fee_bearer === 'none'}}">
+        <text>快递/包装费</text>
+        <text>不计入</text>
+      </view>
+      <view class="divider"></view>
+      <view class="row-between">
+        <text class="bill-total__label">合计应付</text>
+        <text class="bill-total">¥{{totalText}}</text>
+      </view>
+    </view>
+
+    <!-- 当前状态 -->
+    <view class="card status-card">
+      <view class="row-between">
+        <view class="card-title status-card__title">支付状态</view>
+        <text class="tag tag--{{payView.color}}">{{payView.label}}</text>
+      </view>
+      <view class="status-tip status-tip--orange" wx:if="{{p.pay_status === 'paid_pending'}}">
+        ✅ 已标记付款，等待发起人确认收款
+      </view>
+      <view class="status-tip status-tip--green" wx:if="{{p.pay_status === 'confirmed'}}">
+        🎉 发起人已确认收款，请留意提货通知
+      </view>
+      <view class="status-tip status-tip--blue" wx:if="{{p.pay_status === 'cash_on_pickup'}}">
+        🤝 提货时请向发起人当面支付 <text class="strong">¥{{totalText}}</text>
+      </view>
+      <view class="muted status-note" wx:if="{{p.paid_at}}">标记付款时间：{{paidAtText}}</view>
+    </view>
+
+    <!-- 支付方式选择（未付款时展示） -->
+    <view class="card" wx:if="{{gb.status !== 'cancelled' && p.pay_status === 'unpaid'}}">
+      <view class="card-title">选择支付方式</view>
+
+      <view class="method-tabs" wx:if="{{gb.pay_qr_enabled && gb.pay_cash_enabled}}">
+        <view class="method-tab {{activeMethod === 'qr' ? 'is-active' : ''}}" data-m="qr" bindtap="onMethod">微信收款码</view>
+        <view class="method-tab {{activeMethod === 'cash' ? 'is-active' : ''}}" data-m="cash" bindtap="onMethod">当面支付</view>
+      </view>
+
+      <!-- 方式一：微信收款码 -->
+      <block wx:if="{{activeMethod === 'qr' && gb.pay_qr_enabled}}">
+        <view class="qr-card">
+          <image
+            class="qr-img"
+            src="{{gb.pay_qr_temp_url}}"
+            mode="aspectFit"
+            show-menu-by-longpress="{{true}}"
+            bindtap="previewQr"></image>
+        </view>
+        <view class="qr-hint">长按识别或保存图片后扫码支付</view>
+        <button class="btn btn-plain qr-save" bindtap="onSaveQr" disabled="{{saving}}">保存收款码到相册</button>
+        <view class="qr-note" wx:if="{{gb.pay_qr_note}}">📢 {{gb.pay_qr_note}}</view>
+        <view class="muted note-label">转账备注（选填）</view>
+        <input class="input" placeholder="如微信昵称 / 尾号" value="{{paymentNote}}" bindinput="onNote" maxlength="40" />
+        <view class="muted pay-foot-hint">转账后点击下方「我已付款」</view>
+      </block>
+
+      <!-- 方式二：当面支付 -->
+      <block wx:if="{{activeMethod === 'cash' && gb.pay_cash_enabled}}">
+        <view class="cash-card">
+          <text class="cash-card__icon">🤝</text>
+          <view class="cash-card__title">提货时当面支付现金 / 红包</view>
+          <view class="muted">无需现在付款，提货时把 ¥{{totalText}} 交给发起人即可</view>
+        </view>
+        <view class="muted pay-foot-hint">点击下方按钮确认选择</view>
+      </block>
+    </view>
+
+    <view class="back-tip muted" bindtap="goDetail">← 返回拼单详情</view>
+  </block>
+</block>
+
+<!-- 底部操作按钮 -->
+<view class="footer-bar" wx:if="{{p && gb.status !== 'cancelled' && p.pay_status === 'unpaid'}}">
+  <button class="btn btn-primary" wx:if="{{activeMethod === 'qr' && gb.pay_qr_enabled}}" bindtap="onMarkPaid" disabled="{{acting}}">我已付款</button>
+  <button class="btn btn-plain" wx:elif="{{activeMethod === 'cash' && gb.pay_cash_enabled}}" bindtap="onChooseCash" disabled="{{acting}}">确认选择当面支付</button>
+</view>
+<view class="page-pad-bottom" wx:if="{{p && p.pay_status === 'unpaid' && gb.status !== 'cancelled'}}"></view>

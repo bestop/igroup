@@ -1,0 +1,67 @@
+<view class="page-header">
+  <view class="page-header__title">我的</view>
+</view>
+
+<!-- 名片 -->
+<view class="card">
+  <view class="row-between">
+    <view class="row">
+      <image class="avatar" src="{{profile.avatar}}" wx:if="{{profile && profile.avatar}}" mode="aspectFill"></image>
+      <view class="avatar avatar--plain" wx:else>👤</view>
+      <view>
+        <view class="profile-name">{{profile ? profile.nickname : ''}}</view>
+        <view class="muted">拼单时展示给邻居</view>
+      </view>
+    </view>
+    <button class="btn btn-mini btn-mini-plain" bindtap="toggleEdit">{{editing ? '收起' : '修改'}}</button>
+  </view>
+  <block wx:if="{{editing}}">
+    <view class="divider"></view>
+    <view class="row">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
+        <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
+      </button>
+      <input class="input" type="nickname" placeholder="填写昵称" value="{{nickname}}" bindinput="onNickname" />
+      <button class="btn btn-mini btn-mini-primary save-btn" bindtap="saveProfile" disabled="{{saving}}">保存</button>
+    </view>
+  </block>
+
+  <view class="profile-stats">
+    <view class="profile-stats__item">
+      <view class="profile-stats__num">{{joinedCount}}</view>
+      <view class="muted">参与的拼单</view>
+    </view>
+    <view class="profile-stats__divider"></view>
+    <view class="profile-stats__item">
+      <view class="profile-stats__num">{{createdCount}}</view>
+      <view class="muted">发起的拼单</view>
+    </view>
+  </view>
+</view>
+
+<!-- 菜单 -->
+<view class="card menu">
+  <view class="menu-item" hover-class="press" bindtap="goOrders">
+    <text class="menu-item__icon">📋</text>
+    <text class="menu-item__text">我的订单</text>
+    <text class="menu-item__arrow">›</text>
+  </view>
+  <view class="menu-item" hover-class="press" bindtap="goIndex">
+    <text class="menu-item__icon">🏠</text>
+    <text class="menu-item__text">我发起的拼单</text>
+    <text class="menu-item__arrow">›</text>
+  </view>
+  <button class="menu-item menu-item--btn" hover-class="press" open-type="share">
+    <text class="menu-item__icon">📣</text>
+    <text class="menu-item__text">推荐给邻居</text>
+    <text class="menu-item__arrow">›</text>
+  </button>
+  <view class="menu-item" hover-class="press" bindtap="onAbout">
+    <text class="menu-item__icon">💰</text>
+    <text class="menu-item__text">资金说明</text>
+    <text class="menu-item__arrow">›</text>
+  </view>
+</view>
+
+<view class="about-foot muted">邻里拼单 · 小程序不经手任何资金</view>

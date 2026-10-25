@@ -1,0 +1,106 @@
+.banner {
+  margin: 24rpx;
+  padding: 20rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+}
+.banner--red { background: var(--primary-light); color: var(--primary); }
+
+.detail-img {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 24rpx;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+.detail-img--placeholder {
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 76rpx;
+}
+.detail-body { flex: 1; min-width: 0; }
+.detail-name { font-size: 36rpx; font-weight: 800; line-height: 1.4; }
+.detail-tags { gap: 16rpx; margin: 12rpx 0; }
+.detail-price {
+  font-size: 52rpx;
+  color: var(--primary);
+  font-weight: 700;
+}
+.detail-price__unit { font-size: 26rpx; font-weight: 400; color: var(--muted); }
+
+.detail-progress { margin-top: 26rpx; }
+.detail-progress__text { margin-bottom: 12rpx; font-size: 30rpx; }
+.hl { color: var(--primary); font-weight: 700; }
+.strong { font-weight: 700; }
+
+/* 倒计时：浅色内嵌卡片 + 红色数字 */
+.countdown {
+  margin-top: 24rpx;
+  background: var(--bg);
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+.countdown__label { color: var(--muted); }
+.countdown__time { font-size: 36rpx; font-weight: 700; color: var(--primary); }
+
+.detail-info {
+  font-size: 30rpx;
+  line-height: 1.6;
+  margin-top: 12rpx;
+  display: flex;
+  gap: 14rpx;
+}
+.detail-info__label { color: var(--muted); flex-shrink: 0; }
+
+.form-item--grow { flex: 1; }
+.join-hint { margin-top: 10rpx; font-size: 24rpx; }
+
+.avatar--empty2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  background: var(--primary-light);
+  font-size: 28rpx;
+}
+
+.input {
+  background: var(--bg);
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  font-size: 32rpx;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  gap: 18rpx;
+}
+.member__name { flex: 1; font-size: 30rpx; }
+.member__tag { margin-left: 12rpx; }
+.member__shares { font-size: 30rpx; font-weight: 600; color: var(--primary); }
+.member__time { flex: 0 0 200rpx; text-align: right; }
+
+.go-pay-btn { margin-top: 22rpx; }
+.go-pay-tip { margin-top: 14rpx; text-align: center; }
+.join-full { text-align: center; color: var(--muted); }
+
+/* 底部悬浮栏：左步进器 + 应付，右立即拼单 */
+.bar-join {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  min-width: 0;
+}
+.bar-join__amount { font-size: 26rpx; color: var(--muted); white-space: nowrap; }
+.bar-join__amount .amount { font-size: 34rpx; }
+.bar-btn { flex: 0 0 260rpx; }

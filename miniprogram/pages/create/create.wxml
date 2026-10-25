@@ -1,0 +1,180 @@
+<view class="card">
+  <view class="card-title">👤 团长名片</view>
+  <view class="row profile-row">
+    <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
+      <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
+    </button>
+    <view class="profile-fields">
+      <view class="profile-fields__row">
+        <text class="profile-fields__label">昵称</text>
+        <input class="input profile-fields__input" type="nickname" placeholder="邻居将看到的称呼" value="{{nickname}}" data-field="nickname" bindinput="onField" />
+      </view>
+      <view class="profile-fields__hint muted">点头像可更换 · 昵称供团长核对</view>
+    </view>
+  </view>
+</view>
+
+<view class="card">
+  <view class="card-title">🛒 商品信息</view>
+
+  <view class="form-item">
+    <view class="form-item__label">商超来源</view>
+    <view class="chips">
+      <view class="chip {{storeIndex === index ? 'is-active' : ''}}" wx:for="{{stores}}" wx:key="*this" data-index="{{index}}" bindtap="onStorePick">{{item}}</view>
+    </view>
+    <input wx:if="{{stores[storeIndex] === '其他'}}" class="input input--gap" placeholder="填写商超名称" value="{{customStore}}" bindinput="onCustomStore" />
+  </view>
+
+  <view class="form-item">
+    <view class="form-item__label">商品名称 <text class="req">*</text></view>
+    <input class="input" placeholder="如：山姆瑞士卷 16 装经典口味" value="{{productName}}" data-field="productName" bindinput="onField" maxlength="30" />
+  </view>
+
+  <view class="form-item">
+    <view class="form-item__label">商品图片（可选）</view>
+    <view class="img-picker" bindtap="chooseProductImage">
+      <image class="img-picker__img" src="{{productImage}}" mode="aspectFill" wx:if="{{productImage}}"></image>
+      <view class="img-picker__empty" wx:else>＋<text>添加图片</text></view>
+    </view>
+  </view>
+
+  <view class="form-item form-item--row">
+    <view class="form-item--grow">
+      <view class="form-item__label">整包价格（元）<text class="req">*</text></view>
+      <input class="input" type="digit" placeholder="如 59.80" value="{{packagePriceYuan}}" data-field="packagePriceYuan" bindinput="onField" />
+    </view>
+    <view class="form-item--grow">
+      <view class="form-item__label">每包拆分数量 <text class="req">*</text></view>
+      <input class="input" type="number" placeholder="一包拆几份，如 16" value="{{packageShares}}" data-field="packageShares" bindinput="onField" />
+    </view>
+  </view>
+
+  <view class="form-item form-item--row">
+    <view class="form-item--grow">
+      <view class="form-item__label">总包数</view>
+      <input class="input" type="number" value="{{totalPackages}}" data-field="totalPackages" bindinput="onField" />
+    </view>
+    <view class="form-item--mini">
+      <view class="form-item__label">单位</view>
+      <picker range="{{units}}" value="{{unitIndex}}" bindchange="onUnit">
+        <view class="picker-box">{{units[unitIndex]}}</view>
+      </picker>
+    </view>
+    <view class="form-item--grow">
+      <view class="form-item__label">自留份数</view>
+      <input class="input" type="number" value="{{myShares}}" data-field="myShares" bindinput="onField" />
+    </view>
+  </view>
+  <view class="muted form-item__hint">每份单价 = 整包价格 ÷ 每包拆分数量；自留份数不参与收款</view>
+</view>
+
+<view class="card">
+  <view class="card-title">💰 额外费用（可选）</view>
+
+  <view class="fee-row">
+    <view class="fee-row__left">
+      <switch checked="{{expressEnabled}}" bindchange="onExpressSwitch" color="#FF4D4F" />
+      <text class="fee-row__name">快递费</text>
+    </view>
+    <input wx:if="{{expressEnabled}}" class="input input--inline" type="digit" placeholder="总金额（元）" value="{{expressYuan}}" data-field="expressYuan" bindinput="onField" />
+    <view class="muted" wx:else>不收取</view>
+  </view>
+
+  <view class="fee-row">
+    <view class="fee-row__left">
+      <switch checked="{{packageEnabled}}" bindchange="onPackageSwitch" color="#FF4D4F" />
+      <text class="fee-row__name">包装费</text>
+    </view>
+    <input wx:if="{{packageEnabled}}" class="input input--inline" type="digit" placeholder="总金额（元）" value="{{packageYuan}}" data-field="packageYuan" bindinput="onField" />
+    <view class="muted" wx:else>不收取</view>
+  </view>
+
+  <view class="form-item" wx:if="{{expressEnabled || packageEnabled}}">
+    <view class="form-item__label">费用由谁承担</view>
+    <radio-group bindchange="onBearer" class="radio-row">
+      <label class="radio-item" wx:for="{{bearers}}" wx:key="k">
+        <radio value="{{item.k}}" checked="{{bearerIndex === index}}" color="#FF4D4F" />
+        <text>{{item.label}}</text>
+      </label>
+    </radio-group>
+  </view>
+</view>
+
+<view class="card">
+  <view class="card-title">⏰ 拼单安排</view>
+
+  <view class="form-item form-item--row">
+    <view class="form-item--grow">
+      <view class="form-item__label">截单日期 <text class="req">*</text></view>
+      <picker mode="date" value="{{date}}" start="{{todayStr}}" bindchange="onDate">
+        <view class="picker-box">{{date || '选择日期'}}</view>
+      </picker>
+    </view>
+    <view class="form-item--grow">
+      <view class="form-item__label">截单时间 <text class="req">*</text></view>
+      <picker mode="time" value="{{time}}" bindchange="onTime">
+        <view class="picker-box">{{time || '选择时间'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="form-item">
+    <view class="form-item__label">提货地点</view>
+    <input class="input" placeholder="如：小区南门 / 3号楼一层大厅" value="{{pickupLocation}}" data-field="pickupLocation" bindinput="onField" maxlength="40" />
+  </view>
+
+  <view class="form-item">
+    <view class="form-item__label">备注说明</view>
+    <textarea class="textarea" placeholder="如：口味统一经典原味，到货后当天取走" value="{{remark}}" data-field="remark" bindinput="onField" maxlength="200" auto-height></textarea>
+  </view>
+</view>
+
+<view class="card">
+  <view class="card-title">🧧 收款方式 <text class="req">*</text></view>
+  <view class="muted form-item__hint">小程序不经手资金，两种方式可同时开启</view>
+
+  <view class="pay-setting">
+    <view class="row-between">
+      <view>
+        <view class="pay-setting__name">微信收款码</view>
+        <view class="muted">邻居扫码转账，转后在页内点"我已付款"</view>
+      </view>
+      <switch checked="{{qrEnabled}}" bindchange="onQrSwitch" color="#FF4D4F" />
+    </view>
+    <block wx:if="{{qrEnabled}}">
+      <view class="img-picker img-picker--qr" bindtap="chooseQrImage">
+        <image class="img-picker__img" src="{{qrImage}}" mode="aspectFit" wx:if="{{qrImage}}"></image>
+        <view class="img-picker__empty" wx:else>＋<text>上传收款码</text></view>
+      </view>
+      <input class="input" placeholder="收款说明，如：请备注拼单昵称" value="{{qrNote}}" data-field="qrNote" bindinput="onField" maxlength="60" />
+    </block>
+  </view>
+
+  <view class="pay-setting">
+    <view class="row-between">
+      <view>
+        <view class="pay-setting__name">线下现金 / 红包</view>
+        <view class="muted">提货时当面支付，无需提前付款</view>
+      </view>
+      <switch checked="{{cashEnabled}}" bindchange="onCashSwitch" color="#FF4D4F" />
+    </view>
+  </view>
+</view>
+
+<view class="card" wx:if="{{preview}}">
+  <view class="card-title">📐 分摊预览</view>
+  <view class="preview-line">总货值 <text class="amount"><text class="amount__rmb">¥</text>{{preview.total_value_text}}</text>，共 <text class="strong">{{preview.total_shares}}</text> {{preview.unit}}</view>
+  <view class="muted preview-detail">每份 = 整包 ¥{{preview.package_price_text}} ÷ 每包拆 {{preview.package_shares}} {{preview.unit}} ≈ ¥{{preview.goods_per_share_text}}（四舍五入到分）</view>
+  <view class="preview-line" style="margin-top: 14rpx;">邻居每{{preview.unit}}应付 <text class="amount"><text class="amount__rmb">¥</text>{{preview.per_share_text}}</text></view>
+  <view class="muted preview-detail" wx:if="{{preview.bearer === 'split' && preview.has_fees}}">已含快递分摊 ¥{{preview.express_share_text}}、包装分摊 ¥{{preview.package_share_text}}</view>
+  <view class="muted preview-detail" wx:elif="{{preview.bearer === 'initiator'}}">快递/包装费由你承担，邻居只付商品单价</view>
+  <view class="muted preview-detail" wx:elif="{{preview.bearer === 'none'}}">快递/包装费不计入，邻居只付商品单价</view>
+  <view class="divider"></view>
+  <view class="preview-line">你自留 <text class="strong">{{preview.my_shares}}</text> {{preview.unit}}，剩余 <text class="hl">{{preview.left_text}}</text> {{preview.unit}} 供邻居拼单</view>
+</view>
+
+<view class="submit-wrap">
+  <button class="btn btn-primary" disabled="{{submitting}}" bindtap="onSubmit">{{editing ? '保存修改' : '发布拼单'}}</button>
+  <view class="muted submit-tip">{{editing ? '保存后应付金额按新价自动重算' : '发布后分享到微信群，邻居即可加入'}}</view>
+</view>

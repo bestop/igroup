@@ -1,0 +1,98 @@
+<view wx:if="{{loading}}" class="empty">加载中…</view>
+
+<block wx:if="{{gb && summary}}">
+  <!-- 拼单概况 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="gb-name">{{gb.store}} · {{gb.product_name}}</view>
+      <text class="tag tag--{{statusView.color}}">{{statusView.label}}</text>
+    </view>
+    <view class="muted gb-meta">已拼 {{gb.sold_shares}}/{{gb.total_shares}} {{gb.unit}}（含团长自留 {{gb.initiator_shares || 0}}）· {{summary.neighbor_count}} 位邻居参与</view>
+    <view class="muted gb-meta" wx:if="{{gb.status === 'open'}}">距截单还有 {{countdown}}（{{summary.deadline_text}} 截止）</view>
+  </view>
+
+  <!-- 收款汇总 -->
+  <view class="card">
+    <view class="card-title">💰 收款汇总</view>
+    <view class="stat-grid">
+      <view class="stat">
+        <view class="stat__num">¥{{summary.total_text}}</view>
+        <view class="stat__label">总应收</view>
+      </view>
+      <view class="stat stat--green">
+        <view class="stat__num">¥{{summary.confirmed_text}}</view>
+        <view class="stat__label">已确认收款</view>
+      </view>
+      <view class="stat stat--orange">
+        <view class="stat__num">¥{{summary.pending_text}}</view>
+        <view class="stat__label">待确认</view>
+      </view>
+      <view class="stat stat--gray">
+        <view class="stat__num">{{summary.unpaid_count}} 人</view>
+        <view class="stat__label">未付款</view>
+      </view>
+    </view>
+    <view class="muted stat-extra" wx:if="{{summary.cash_count}}">🤝 当面支付 {{summary.cash_count}} 人（提货时收款）</view>
+    <view class="progress stat-progress"><view class="progress__inner" style="width: {{summary.confirmed_pct}}%"></view></view>
+    <view class="muted">已确认比例 {{summary.confirmed_pct}}%</view>
+  </view>
+
+  <!-- 拼单操作 -->
+  <view class="card">
+    <view class="card-title">⚙️ 拼单操作</view>
+    <block wx:if="{{gb.status === 'open'}}">
+      <button class="btn btn-plain op-btn" bindtap="onEdit">✏️ 编辑拼单</button>
+      <button class="btn btn-primary op-btn" bindtap="onClose">提前截单</button>
+      <button class="btn btn-plain op-btn op-btn--danger" bindtap="onCancel">取消拼单</button>
+    </block>
+    <block wx:if="{{gb.status === 'closed'}}">
+      <button class="btn btn-primary op-btn" bindtap="onPurchased">已完成购买</button>
+      <button class="btn btn-plain op-btn op-btn--danger" bindtap="onCancel">取消拼单</button>
+    </block>
+    <block wx:if="{{gb.status === 'purchased'}}">
+      <button class="btn btn-green op-btn" bindtap="onNotifyPickup">通知提货</button>
+      <view class="muted op-tip">已提货 {{summary.picked_count}}/{{summary.neighbor_count}} 人</view>
+      <button class="btn btn-plain op-btn" bindtap="onComplete">完成拼单</button>
+    </block>
+    <view class="muted op-tip" wx:if="{{gb.status === 'completed'}}">拼单已完成 🎉</view>
+    <view class="muted op-tip" wx:if="{{gb.status === 'cancelled'}}">已取消 · 已付款邻居请线下退款</view>
+  </view>
+
+  <!-- 参与人与收款管理 -->
+  <view class="card">
+    <view class="card-title">
+      <text>👥 收款管理（{{summary.neighbor_count}} 位邻居）</text>
+      <text class="confirm-all" wx:if="{{summary.pending_count > 0}}" bindtap="onConfirmAll">一键确认全部（{{summary.pending_count}}）</text>
+    </view>
+    <view class="empty" wx:if="{{!participants.length}}">还没有邻居加入</view>
+
+    <view class="person" wx:for="{{participants}}" wx:key="_id">
+      <view class="row">
+        <image class="avatar" src="{{item.avatar_url}}" wx:if="{{item.avatar_url}}" mode="aspectFill"></image>
+        <view class="avatar avatar--fallback" wx:else>{{item.nickname[0]}}</view>
+        <view class="person__main">
+          <view class="row-between">
+            <text class="person__name">{{item.nickname}}</text>
+            <text class="person__amount" wx:if="{{!item.is_initiator_row}}"><text class="amount"><text class="amount__rmb">¥</text>{{item.amount_text}}</text></text>
+          </view>
+          <view class="muted person__meta" wx:if="{{!item.is_initiator_row}}">{{item.shares}} {{item.unit}} · {{item.pay_method_text}}</view>
+          <view class="muted person__meta" wx:else>{{item.shares}} {{item.unit}} · 发起时自留，无需收款</view>
+          <view class="row person__tags">
+            <text class="tag tag--{{item.pay_view.color}}">{{item.pay_view.label}}</text>
+            <text class="tag tag--{{item.picked_up ? 'green' : 'gray'}}" wx:if="{{!item.is_initiator_row && (gb.status === 'purchased' || item.picked_up)}}">{{item.pickup_text}}</text>
+            <text class="person__time muted">{{item.joined_text}}</text>
+          </view>
+          <view class="confirm-hint" wx:if="{{item.can_confirm}}">已转账，点击下方确认收款</view>
+          <view class="muted person__note" wx:if="{{item.payment_note}}">备注：{{item.payment_note}}</view>
+        </view>
+      </view>
+      <view class="row person__actions" wx:if="{{item.has_actions}}">
+        <button wx:if="{{item.can_confirm}}" class="btn btn-mini btn-mini-green" data-pid="{{item._id}}" data-act="confirmPay" bindtap="rowAction">确认收款</button>
+        <button wx:if="{{item.can_reject}}" class="btn btn-mini btn-mini-plain" data-pid="{{item._id}}" data-act="rejectPay" bindtap="rowAction">未收到款</button>
+        <button wx:if="{{item.can_cash}}" class="btn btn-mini btn-mini-blue" data-pid="{{item._id}}" data-act="confirmCash" bindtap="rowAction">当面已收款</button>
+        <button wx:if="{{item.can_remind}}" class="btn btn-mini btn-mini-plain" data-pid="{{item._id}}" data-act="remindPay" bindtap="rowAction">提醒付款</button>
+        <button wx:if="{{item.can_remove}}" class="btn btn-mini btn-mini-danger" data-pid="{{item._id}}" bindtap="onRemove">移除</button>
+      </view>
+    </view>
+  </view>
+</block>

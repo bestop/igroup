@@ -1,0 +1,73 @@
+<view class="page-header">
+  <view class="page-header__title">邻里拼单</view>
+  <view class="page-header__sub">今天想拼点什么？</view>
+</view>
+
+<scroll-view scroll-x class="pills" enhanced show-scrollbar="{{false}}">
+  <view class="pill {{tab === 'joined' ? 'is-active' : ''}}" data-tab="joined" bindtap="onTab">我参与的</view>
+  <view class="pill {{tab === 'created' ? 'is-active' : ''}}" data-tab="created" bindtap="onTab">我发起的</view>
+</scroll-view>
+
+<!-- 我参与的 -->
+<block wx:if="{{tab === 'joined'}}">
+  <view wx:if="{{!joined.length && !loading}}" class="empty">
+    <text class="empty__icon">🧺</text>
+    <view>还没有参与的拼单</view>
+    <view class="muted">去「发现」看看邻居都在拼什么</view>
+  </view>
+  <view class="card gb-item" wx:for="{{joined}}" wx:key="pid" hover-class="press" data-id="{{item.gb_id}}" bindtap="goDetail">
+    <image class="gb-item__img" src="{{item.image_url}}" mode="aspectFill" wx:if="{{item.image_url}}"></image>
+    <view class="gb-item__img gb-item__img--placeholder" wx:else>🛒</view>
+    <view class="gb-item__body">
+      <view class="row-between">
+        <view class="gb-item__name">{{item.store}} · {{item.product_name}}</view>
+        <text class="tag tag--{{item.gb_status_view.color}}">{{item.gb_status_view.label}}</text>
+      </view>
+      <view class="row-between gb-item__mid">
+        <view>我买了 <text class="strong">{{item.shares}}</text> {{item.unit}}，应付 <text class="amount"><text class="amount__rmb">¥</text>{{item.amount_due_text}}</text></view>
+      </view>
+      <view class="row-between">
+        <text class="tag tag--{{item.pay_status_view.color}}">{{item.pay_status_view.label}}</text>
+        <view class="muted" wx:if="{{item.gb_status === 'open'}}">截单 {{item.deadline_text}}</view>
+      </view>
+      <view class="refund-hint" wx:if="{{item.gb_status === 'cancelled' && (item.pay_status === 'paid_pending' || item.pay_status === 'confirmed')}}">
+        拼单已取消，已付款请联系发起人退款
+      </view>
+    </view>
+  </view>
+</block>
+
+<!-- 我发起的 -->
+<block wx:if="{{tab === 'created'}}">
+  <view wx:if="{{!created.length && !loading}}" class="empty">
+    <text class="empty__icon">📣</text>
+    <view>你还没有发起过拼单</view>
+    <view class="muted">点击下方按钮，当一回团长</view>
+  </view>
+  <view class="card gb-item" wx:for="{{created}}" wx:key="id" hover-class="press">
+    <view data-id="{{item.id}}" bindtap="goDetail" class="gb-item__tap">
+      <image class="gb-item__img" src="{{item.image_url}}" mode="aspectFill" wx:if="{{item.image_url}}"></image>
+      <view class="gb-item__img gb-item__img--placeholder" wx:else>🛒</view>
+      <view class="gb-item__body">
+        <view class="row-between">
+          <view class="gb-item__name">{{item.store}} · {{item.product_name}}</view>
+          <text class="tag tag--{{item.status_view.color}}">{{item.status_view.label}}</text>
+        </view>
+        <view class="muted">¥{{item.unit_price_text}}/{{item.unit}} · 已拼 {{item.sold_shares}}/{{item.total_shares}} {{item.unit}} · {{item.participant_count}} 人参与</view>
+        <view class="muted" wx:if="{{item.status === 'open'}}">截单 {{item.deadline_text}}</view>
+      </view>
+    </view>
+    <view class="gb-item__summary">
+      <text>已确认收款 <text class="amount"><text class="amount__rmb">¥</text>{{item.confirmed_text}}</text></text>
+      <text wx:if="{{item.pending_text !== '0.00'}}">待确认 ¥{{item.pending_text}}</text>
+      <text wx:if="{{item.unpaid_count}}">待付款 {{item.unpaid_count}} 人</text>
+      <text wx:if="{{item.cash_count}}">当面支付 {{item.cash_count}} 人</text>
+    </view>
+    <view class="row gb-item__actions">
+      <button class="btn btn-mini btn-mini-primary" data-id="{{item.id}}" catchtap="goManage">团长管理</button>
+    </view>
+  </view>
+</block>
+
+<view class="fab" bindtap="goCreate">＋ 发起拼单</view>
+<view class="page-pad-bottom"></view>

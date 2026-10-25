@@ -1,0 +1,268 @@
+/* ===== 全局设计变量：珊瑚红主色 · 现代极简卡片风（iOS 小组件质感） ===== */
+page {
+  --primary: #FF4D4F;
+  --primary-deep: #E8393B;
+  --primary-light: #FFF1F0;
+  --green: #52C41A;
+  --green-light: #F6FFED;
+  --blue: #1890FF;
+  --blue-light: #E6F7FF;
+  --orange: #FA8C16;
+  --orange-light: #FFF7E6;
+  --text: #1A1A1A;
+  --muted: #999999;
+  --gray: #999999;
+  --gray-light: #F0F0F0;
+  --line: #F0F0F0;
+  --red: #FF4D4F;
+  --bg: #F7F8FA;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 30rpx;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+}
+
+/* 金额、份额、倒计时等数字：现代无衬线字体，提升专业感 */
+.amount,
+.stat__num,
+.countdown__time,
+.bill-total,
+.detail-price,
+.num-font {
+  font-family: "DIN Alternate", "Avenir Next", "Helvetica Neue", sans-serif;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 30rpx;
+  margin: 24rpx;
+  box-shadow: 0 6rpx 24rpx rgba(26, 26, 26, 0.04);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.card-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* 点击反馈：hover-class="press"（缩放 0.98 + 背景微深） */
+.press {
+  transform: scale(0.98);
+  background-color: #FCFCFD;
+}
+
+/* ===== 大标题头（首页/发现/我的） ===== */
+.page-header { padding: 36rpx 32rpx 8rpx; }
+.page-header__title { font-size: 52rpx; font-weight: 800; color: var(--text); }
+.page-header__sub { font-size: 28rpx; color: var(--muted); margin-top: 8rpx; }
+
+/* ===== 胶囊标签栏（横向滑动） ===== */
+.pills {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 16rpx 24rpx;
+  white-space: nowrap;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  color: #4A4A4A;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 28rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 10rpx rgba(26, 26, 26, 0.04);
+  transition: all 0.15s ease;
+}
+.pill.is-active {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6rpx 16rpx rgba(255, 77, 79, 0.3);
+}
+
+/* ===== 按钮 ===== */
+.btn {
+  border-radius: 48rpx;
+  font-size: 34rpx;
+  line-height: 1;
+  padding: 26rpx 0;
+  text-align: center;
+  border: none;
+}
+.btn::after { border: none; }
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8rpx 20rpx rgba(255, 77, 79, 0.25);
+}
+.btn-primary[disabled] { background: #FFB3B4; color: #fff; box-shadow: none; }
+.btn-green { background: var(--green); color: #fff; font-weight: 600; }
+.btn-blue { background: var(--blue); color: #fff; font-weight: 600; }
+.btn-plain {
+  background: #fff;
+  color: var(--primary);
+  border: 2rpx solid var(--primary);
+  box-sizing: border-box;
+}
+.btn-mini {
+  border-radius: 28rpx;
+  font-size: 26rpx;
+  padding: 10rpx 26rpx;
+  margin: 0;
+  line-height: 1.4;
+}
+.btn-mini::after { border: none; }
+.btn-mini-primary { background: var(--primary); color: #fff; }
+.btn-mini-green { background: var(--green); color: #fff; }
+.btn-mini-blue { background: var(--blue); color: #fff; }
+.btn-mini-plain { background: #fff; color: var(--muted); border: 2rpx solid #E5E6EB; box-sizing: border-box; }
+.btn-mini-danger { background: var(--primary-light); color: var(--primary); border: 2rpx solid #FFD6D6; box-sizing: border-box; }
+
+/* ===== 状态标签（支付状态全端统一：待付款灰 / 待确认橙 / 已确认绿 / 当面支付蓝） ===== */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 20rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+.tag--green { background: var(--green-light); color: var(--green); }
+.tag--orange { background: var(--orange-light); color: var(--orange); }
+.tag--gray { background: #F2F3F5; color: var(--muted); }
+.tag--blue { background: var(--blue-light); color: var(--blue); }
+.tag--red { background: var(--primary-light); color: var(--primary); }
+
+/* ===== 进度条（胶囊形，珊瑚红进度） ===== */
+.progress {
+  height: 16rpx;
+  background: #F2F3F5;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+.progress__inner {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #FF7875, var(--primary));
+  transition: width 0.3s;
+}
+
+/* ===== 金额 ===== */
+.amount { color: var(--primary); font-weight: 700; }
+.amount__rmb { font-size: 0.7em; margin-right: 2rpx; }
+
+/* ===== 通用行 ===== */
+.row { display: flex; align-items: center; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+.muted { color: var(--muted); font-size: 26rpx; }
+.divider { height: 2rpx; background: var(--line); margin: 24rpx 0; }
+
+/* ===== 空状态 ===== */
+.empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: var(--muted);
+  font-size: 28rpx;
+}
+.empty__icon { font-size: 90rpx; display: block; margin-bottom: 20rpx; }
+
+/* ===== 头像 ===== */
+.avatar { width: 72rpx; height: 72rpx; border-radius: 50%; background: var(--gray-light); flex-shrink: 0; }
+
+/* ===== 头像选择按钮（团长名片 / 加入拼单 / 我的名片共用） ===== */
+.avatar-btn {
+  flex-shrink: 0;
+  width: 96rpx;
+  height: 96rpx;
+  padding: 0;
+  margin: 0 24rpx 0 0;
+  background: transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  line-height: 1;
+}
+.avatar-btn::after { border: none; }
+.avatar-btn .avatar { width: 96rpx; height: 96rpx; display: block; }
+.avatar--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rpx;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 44rpx;
+  line-height: 1;
+  border: 2rpx dashed #FFC7C7;
+  box-sizing: border-box;
+}
+.avatar--empty text { font-size: 20rpx; }
+
+/* ===== 计数步进器（圆角边框，iOS 风） ===== */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  background: #F2F3F5;
+  border-radius: 999rpx;
+  padding: 6rpx;
+}
+.stepper__btn {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 56rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--text);
+  font-size: 36rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(26, 26, 26, 0.06);
+}
+.stepper__btn.is-disabled { color: #C9CDD4; }
+.stepper__num {
+  min-width: 80rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+/* ===== 底部操作栏 ===== */
+.footer-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: #fff;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
+  border-top: 2rpx solid var(--line);
+  box-shadow: 0 -4rpx 20rpx rgba(26, 26, 26, 0.05);
+  z-index: 10;
+}
+.footer-bar .btn { flex: 1; }
+
+/* 页面底部留白（含 TabBar/悬浮栏高度） */
+.page-pad-bottom { padding-bottom: 200rpx; }
+
+/* ===== 悬浮发起按钮 ===== */
+.fab {
+  position: fixed;
+  right: 30rpx;
+  bottom: calc(180rpx + env(safe-area-inset-bottom));
+  background: var(--primary);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 26rpx 40rpx;
+  border-radius: 60rpx;
+  box-shadow: 0 10rpx 24rpx rgba(255, 77, 79, 0.35);
+  z-index: 20;
+}

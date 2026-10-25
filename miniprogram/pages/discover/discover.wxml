@@ -1,0 +1,64 @@
+<view class="page-header">
+  <view class="page-header__title">发现</view>
+  <view class="page-header__sub">今天想拼点什么？</view>
+</view>
+
+<!-- 搜索框 -->
+<view class="search-wrap">
+  <view class="search-box">
+    <text class="search-box__icon">🔍</text>
+    <input class="search-box__input" placeholder="搜索商品、发起人或拼单类型" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
+  </view>
+</view>
+
+<!-- 分类标签栏 -->
+<scroll-view scroll-x class="pills" enhanced show-scrollbar="{{false}}">
+  <view class="pill {{activeCat === index ? 'is-active' : ''}}" wx:for="{{cats}}" wx:key="*this" data-index="{{index}}" bindtap="onCat">{{item}}</view>
+</scroll-view>
+
+<!-- 精选推荐：最新截单预警 -->
+<view class="card featured" wx:if="{{featured}}" hover-class="press" data-id="{{featured.id}}" bindtap="goDetail">
+  <view class="featured__body">
+    <view class="featured__tag">即将截单 · 剩 {{featured.countdown}}</view>
+    <view class="featured__title">{{featured.store}} · {{featured.product_name}}</view>
+    <view class="featured__sub">¥{{featured.price_text}}/{{featured.unit}} · 剩 {{featured.remaining}} {{featured.unit}}</view>
+    <view class="featured__foot">已参与 {{featured.participant_count}} 人 · 点击查看 →</view>
+  </view>
+  <view class="featured__icon" style="background: {{featured.tile}}">
+    <image wx:if="{{featured.image_url}}" src="{{featured.image_url}}" mode="aspectFill" class="featured__img" />
+    <text wx:else class="featured__emoji">{{featured.emoji}}</text>
+    <view class="featured__badge">热</view>
+  </view>
+</view>
+
+<!-- 拼单网格 -->
+<view class="module-head">
+  <text class="module-head__title">{{activeCat === 0 ? '附近的拼单' : cats[activeCat]}}</text>
+  <text class="module-head__sub">{{list.length}} 个在拼</text>
+</view>
+
+<view class="grid" wx:if="{{list.length}}">
+  <view class="grid-item" wx:for="{{list}}" wx:key="id" hover-class="press" data-id="{{item.id}}" bindtap="goDetail">
+    <view class="grid-item__icon" style="background: {{item.tile}}">
+      <image wx:if="{{item.image_url}}" src="{{item.image_url}}" mode="aspectFill" class="grid-item__img" />
+      <text wx:else class="grid-item__emoji">{{item.emoji}}</text>
+    </view>
+    <view class="grid-item__title">{{item.store}} · {{item.product_name}}</view>
+    <view class="grid-item__desc">剩 {{item.remaining}} {{item.unit}} · ¥{{item.price_text}}/{{item.unit}}</view>
+    <view class="grid-item__desc">截单：{{item.deadline_short}}</view>
+    <view class="grid-item__foot">
+      <text class="grid-item__stat">已拼 {{item.sold_shares}}/{{item.total_shares}} {{item.unit}}</text>
+      <text class="grid-item__action" wx:if="{{item.is_mine}}">管理</text>
+      <text class="grid-item__action" wx:else>去拼单</text>
+    </view>
+  </view>
+</view>
+
+<view wx:elif="{{!loading}}" class="empty">
+  <text class="empty__icon">🍃</text>
+  <view>暂无进行中的拼单</view>
+  <view class="muted">发起一个，分享到群里吧</view>
+</view>
+
+<view class="fab" bindtap="goCreate">＋ 发起拼单</view>
+<view class="page-pad-bottom"></view>

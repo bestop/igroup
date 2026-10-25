@@ -1,0 +1,55 @@
+.gb-name { font-size: 34rpx; font-weight: 800; flex: 1; margin-right: 16rpx; }
+.gb-meta { margin-top: 10rpx; }
+
+/* 数据看板：横向数据卡，数字加粗、红/橙/绿/灰区分 */
+.stat-grid {
+  display: flex;
+  gap: 14rpx;
+  margin-bottom: 20rpx;
+}
+.stat {
+  flex: 1;
+  background: var(--bg);
+  border-radius: 20rpx;
+  padding: 22rpx 12rpx;
+  text-align: center;
+}
+.stat__num { font-size: 32rpx; font-weight: 700; color: var(--text); }
+.stat__label { font-size: 24rpx; color: var(--muted); margin-top: 8rpx; }
+.stat--green .stat__num { color: var(--green); }
+.stat--orange .stat__num { color: var(--orange); }
+.stat--gray .stat__num { color: var(--muted); }
+.stat-extra { margin-bottom: 14rpx; }
+.stat-progress { margin-bottom: 10rpx; }
+
+.op-btn { margin-bottom: 20rpx; }
+.op-btn:last-child { margin-bottom: 0; }
+.op-btn--danger { color: var(--primary); border-color: #FFD6D6; }
+.op-tip { text-align: center; padding: 8rpx 0; }
+
+/* 一键确认全部：红色文字按钮 */
+.confirm-all { color: var(--primary); font-size: 26rpx; font-weight: 600; }
+
+.person { padding: 24rpx 0; border-top: 2rpx solid var(--line); }
+.person:first-of-type { border-top: none; }
+.person__main { flex: 1; min-width: 0; margin-left: 20rpx; }
+.person__name { font-size: 31rpx; font-weight: 600; }
+.person__amount { font-size: 30rpx; }
+.person__meta { margin: 6rpx 0 10rpx; }
+.person__tags { gap: 12rpx; flex-wrap: wrap; }
+.person__time { margin-left: auto; font-size: 22rpx; }
+.confirm-hint { margin-top: 10rpx; font-size: 24rpx; color: var(--orange); }
+.person__note { margin-top: 10rpx; }
+.person__actions {
+  justify-content: flex-end;
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+.avatar--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 28rpx;
+}
