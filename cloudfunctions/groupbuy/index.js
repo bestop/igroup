@@ -62,13 +62,27 @@ function assertActive(gb) {
   assert(['open', 'closed', 'purchased'].includes(gb.status), '拼单已结束或已取消')
 }
 
+/**
+ * 分页读取全部记录（服务端单次上限 1000 条，循环取完，避免超限时静默截断）。
+ * orderBy 用于保证 skip 分页的稳定性，建议始终传入。
+ */
+async function fetchAll(col, where, orderBy) {
+  const PAGE = 1000
+  const out = []
+  let skip = 0
+  for (;;) {
+    let q = db.collection(col).where(where)
+    if (orderBy) q = q.orderBy(orderBy[0], orderBy[1])
+    const res = await q.skip(skip).limit(PAGE).get()
+    out.push(...res.data)
+    if (res.data.length < PAGE) break
+    skip += PAGE
+  }
+  return out
+}
+
 async function participantsOf(gbId) {
-  const res = await db.collection('participants')
-    .where({ group_buy_id: gbId })
-    .orderBy('joined_at', 'asc')
-    .limit(200)
-    .get()
-  return res.data
+  return fetchAll('participants', { group_buy_id: gbId }, ['joined_at', 'asc'])
 }
 
 async function addNotification(gbId, receiverOpenid, type) {
@@ -151,12 +165,9 @@ async function tempUrlMap(fileIDs) {
 // ================= 定时截单 =================
 async function autoCloseExpired() {
   const now = Date.now()
-  const res = await db.collection('groupbuys')
-    .where({ status: 'open', deadline: _.lte(now) })
-    .limit(100)
-    .get()
+  const expired = await fetchAll('groupbuys', { status: 'open', deadline: _.lte(now) })
   let closed = 0
-  for (const gb of res.data) {
+  for (const gb of expired) {
     const u = await db.collection('groupbuys')
       .where({ _id: gb._id, status: 'open' })
       .update({ data: { status: 'closed' } })
@@ -167,7 +178,7 @@ async function autoCloseExpired() {
         gb.product_name, '拼单已到截单时间，请查看收款并安排购买')
     }
   }
-  return { checked: res.data.length, closed }
+  return { checked: expired.length, closed }
 }
 
 // ================= Action 实现 =================
@@ -634,19 +645,15 @@ const actions = {
 
   /** 我的参与记录（关联拼单信息） */
   async getMyOrders(_event, openid) {
-    const ps = await db.collection('participants')
-      .where({ user_openid: openid })
-      .orderBy('joined_at', 'desc')
-      .limit(50)
-      .get()
-    const ids = [...new Set(ps.data.map(x => x.group_buy_id))]
+    const ps = await fetchAll('participants', { user_openid: openid }, ['joined_at', 'desc'])
+    const ids = [...new Set(ps.map(x => x.group_buy_id))]
     const gbs = ids.length
-      ? await db.collection('groupbuys').where({ _id: _.in(ids) }).get()
-      : { data: [] }
+      ? await fetchAll('groupbuys', { _id: _.in(ids) }, ['_id', 'asc'])
+      : []
     const gbById = {}
-    gbs.data.forEach(g => { gbById[g._id] = g })
-    const urlMap = await tempUrlMap(gbs.data.map(g => g.product_image))
-    return ps.data
+    gbs.forEach(g => { gbById[g._id] = g })
+    const urlMap = await tempUrlMap(gbs.map(g => g.product_image))
+    return ps
       .filter(x => gbById[x.group_buy_id])
       .map(x => {
         const g = gbById[x.group_buy_id]
@@ -681,22 +688,18 @@ const actions = {
 
   /** 我发起的拼单（含收款汇总） */
   async getMyCreated(_event, openid) {
-    const gbs = await db.collection('groupbuys')
-      .where({ initiator_openid: openid })
-      .orderBy('created_at', 'desc')
-      .limit(50)
-      .get()
-    const ids = gbs.data.map(g => g._id)
+    const gbs = await fetchAll('groupbuys', { initiator_openid: openid }, ['created_at', 'desc'])
+    const ids = gbs.map(g => g._id)
     const ps = ids.length
-      ? await db.collection('participants').where({ group_buy_id: _.in(ids) }).get()
-      : { data: [] }
+      ? await fetchAll('participants', { group_buy_id: _.in(ids) }, ['_id', 'asc'])
+      : []
     const byGb = {}
-    ps.data.forEach(x => {
+    ps.forEach(x => {
       const arr = byGb[x.group_buy_id] || (byGb[x.group_buy_id] = [])
       arr.push(x)
     })
-    const urlMap = await tempUrlMap(gbs.data.map(g => g.product_image))
-    return gbs.data.map(g => {
+    const urlMap = await tempUrlMap(gbs.map(g => g.product_image))
+    return gbs.map(g => {
       const list = byGb[g._id] || []
       const sum = st => list.filter(x => x.pay_status === st)
         .reduce((s, x) => s + (x.amount_due || 0), 0)
@@ -723,26 +726,22 @@ const actions = {
 
   /** 发现页：全部进行中的拼单（按截单时间升序）+ 我的参与/发起标记 */
   async listDiscover(_event, openid) {
-    const gbs = await db.collection('groupbuys')
-      .where({ status: 'open' })
-      .orderBy('deadline', 'asc')
-      .limit(50)
-      .get()
-    const ids = gbs.data.map(g => g._id)
+    const gbs = await fetchAll('groupbuys', { status: 'open' }, ['deadline', 'asc'])
+    const ids = gbs.map(g => g._id)
     const ps = ids.length
-      ? await db.collection('participants').where({ group_buy_id: _.in(ids) }).get()
-      : { data: [] }
+      ? await fetchAll('participants', { group_buy_id: _.in(ids) }, ['_id', 'asc'])
+      : []
     const counts = {}
     const joinedSet = new Set()
-    ps.data.forEach(x => {
+    ps.forEach(x => {
       counts[x.group_buy_id] = (counts[x.group_buy_id] || 0) + 1
       if (x.user_openid === openid) joinedSet.add(x.group_buy_id)
     })
-    const urlMap = await tempUrlMap(gbs.data.map(g => g.product_image))
+    const urlMap = await tempUrlMap(gbs.map(g => g.product_image))
     return {
       openid,
       joined_ids: [...joinedSet],
-      list: gbs.data.map(g => ({
+      list: gbs.map(g => ({
         _id: g._id,
         product_name: g.product_name,
         store: g.store,
