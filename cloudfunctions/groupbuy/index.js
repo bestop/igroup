@@ -242,16 +242,25 @@ const actions = {
     }
     await db.collection('groupbuys').doc(gb._id).update({ data })
     // 价格或费用变化时重算应付金额（支付状态保持不变）
+    // 已付款记录（paid_pending/confirmed）不重算：款项已实际易手，
+    // 改动会导致"实收金额与账面记录不符"，只能跳过并提示线下协商差额
     const ps = await participantsOf(gb._id)
     let changed = 0
+    let skipped_paid = 0
     for (const x of ps) {
       const amount = x.shares * (n.unit_price + n.fee_express_per_share + n.fee_package_per_share)
-      if (amount !== x.amount_due) {
-        await db.collection('participants').doc(x._id).update({ data: { amount_due: amount } })
-        changed++
-      }
+      if (amount === x.amount_due) continue
+      if (['paid_pending', 'confirmed'].includes(x.pay_status)) { skipped_paid++; continue }
+      await db.collection('participants').doc(x._id).update({ data: { amount_due: amount } })
+      changed++
     }
-    return { changed_amounts: changed }
+    return {
+      changed_amounts: changed,
+      skipped_paid,
+      skip_warning: skipped_paid
+        ? `有 ${skipped_paid} 条已付款记录未按新价重算，请线下与邻居协商差额`
+        : ''
+    }
   },
 
   /** 移除参与者（仅"拼单中"）：事务内删除记录并回减已拼份数 */

@@ -292,10 +292,16 @@ Page({
     try {
       requestSubscribe()
       if (this.data.editing) {
-        await callCloud('updateGroupBuy', { id: this.data.editId, payload })
+        const res = await callCloud('updateGroupBuy', { id: this.data.editId, payload })
         wx.hideLoading()
-        wx.showToast({ title: '已保存', icon: 'success' })
-        setTimeout(() => wx.navigateBack(), 600)
+        if (res && res.skip_warning) {
+          // 有已付款记录未按新价重算，弹窗提示差额需线下协商
+          wx.showModal({ title: '已保存', content: res.skip_warning, showCancel: false })
+          setTimeout(() => wx.navigateBack(), 1800)
+        } else {
+          wx.showToast({ title: '已保存', icon: 'success' })
+          setTimeout(() => wx.navigateBack(), 600)
+        }
       } else {
         const res = await callCloud('createGroupBuy', { payload })
         wx.hideLoading()
