@@ -10,7 +10,7 @@
 
 .input {
   background: var(--bg);
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   padding: 20rpx 24rpx;
   font-size: 32rpx;
 }
@@ -18,7 +18,7 @@
 .input--inline { flex: 1; margin-left: 20rpx; }
 .textarea {
   background: var(--bg);
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   padding: 20rpx 24rpx;
   font-size: 30rpx;
   width: auto;
@@ -33,6 +33,7 @@
   padding: 12rpx 34rpx;
   font-size: 30rpx;
   border: 2rpx solid transparent;
+  transition: all 0.15s ease;
 }
 .chip.is-active {
   background: var(--primary-light);
@@ -43,7 +44,7 @@
 
 .picker-box {
   background: var(--bg);
-  border-radius: 14rpx;
+  border-radius: 16rpx;
   padding: 20rpx 24rpx;
   font-size: 32rpx;
 }

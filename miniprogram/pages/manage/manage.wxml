@@ -61,8 +61,8 @@
   <!-- 参与人与收款管理 -->
   <view class="card">
     <view class="card-title">
-      <view class="row"><image class="ic" src="/assets/icons/users-gray.png" mode="aspectFit" />收款管理（{{summary.neighbor_count}} 位邻居）</view>
-      <text class="confirm-all" wx:if="{{summary.pending_count > 0}}" bindtap="onConfirmAll">一键确认全部（{{summary.pending_count}}）</text>
+      <view class="row"><image class="ic-title" src="/assets/icons/users-gray.png" mode="aspectFit" />收款管理（{{summary.neighbor_count}} 位邻居）</view>
+      <text class="confirm-all" hover-class="press" wx:if="{{summary.pending_count > 0}}" bindtap="onConfirmAll">一键确认全部（{{summary.pending_count}}）</text>
     </view>
     <view class="empty" wx:if="{{!participants.length}}">还没有邻居加入</view>
 

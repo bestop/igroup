@@ -7,6 +7,7 @@
   display: flex;
   background: #fff;
   border-top: 2rpx solid #F0F0F0;
+  box-shadow: 0 -6rpx 24rpx rgba(26, 26, 26, 0.04);
   padding-bottom: env(safe-area-inset-bottom);
 }
 .tab-item {
@@ -18,6 +19,8 @@
   color: #999999;
   transition: color 0.15s ease;
 }
-.tab-item__icon { width: 46rpx; height: 46rpx; }
+.tab-item__icon { width: 46rpx; height: 46rpx; transition: transform 0.15s ease; }
 .tab-item__text { font-size: 22rpx; margin-top: 4rpx; }
 .tab-item.is-active { color: #FF4D4F; font-weight: 600; }
+/* 选中图标轻微上浮，强化当前页感知 */
+.tab-item.is-active .tab-item__icon { transform: translateY(-4rpx); }

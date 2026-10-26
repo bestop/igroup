@@ -102,9 +102,9 @@
   <block wx:if="{{canJoin}}">
     <view class="bar-join">
       <view class="stepper">
-        <view class="stepper__btn {{joinShares <= 1 ? 'is-disabled' : ''}}" bindtap="onMinus">−</view>
+        <view class="stepper__btn {{joinShares <= 1 ? 'is-disabled' : ''}}" hover-class="stepper__btn--press" hover-stay-time="80" bindtap="onMinus">−</view>
         <view class="stepper__num">{{joinShares}}</view>
-        <view class="stepper__btn {{joinShares >= remainingShares ? 'is-disabled' : ''}}" bindtap="onPlus">＋</view>
+        <view class="stepper__btn {{joinShares >= remainingShares ? 'is-disabled' : ''}}" hover-class="stepper__btn--press" hover-stay-time="80" bindtap="onPlus">＋</view>
       </view>
       <view class="bar-join__amount"><text class="amount"><text class="amount__rmb">¥</text>{{joinAmountText}}</text></view>
     </view>

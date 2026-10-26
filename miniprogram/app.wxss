@@ -28,6 +28,7 @@ page {
 .countdown__time,
 .bill-total,
 .detail-price,
+.stepper__num,
 .num-font {
   font-family: "DIN Alternate", "Avenir Next", "Helvetica Neue", sans-serif;
 }
@@ -38,7 +39,8 @@ page {
   border-radius: 32rpx;
   padding: 30rpx;
   margin: 24rpx;
-  box-shadow: 0 6rpx 24rpx rgba(26, 26, 26, 0.04);
+  /* 双层阴影：近层收边、远层铺开，接近 iOS 卡片质感 */
+  box-shadow: 0 2rpx 8rpx rgba(26, 26, 26, 0.03), 0 12rpx 32rpx rgba(26, 26, 26, 0.05);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 .card-title {
@@ -75,6 +77,7 @@ page {
   border-radius: 999rpx;
   padding: 14rpx 34rpx;
   font-size: 28rpx;
+  font-weight: 500;
   margin-right: 16rpx;
   flex-shrink: 0;
   box-shadow: 0 2rpx 10rpx rgba(26, 26, 26, 0.04);
@@ -133,6 +136,7 @@ page {
   padding: 6rpx 20rpx;
   border-radius: 999rpx;
   font-size: 24rpx;
+  font-weight: 500;
   white-space: nowrap;
 }
 .tag--green { background: var(--green-light); color: var(--green); }
@@ -165,12 +169,17 @@ page {
 .muted { color: var(--muted); font-size: 26rpx; }
 .divider { height: 2rpx; background: var(--line); margin: 24rpx 0; }
 
-/* ===== 空状态 ===== */
+/* ===== 空状态（淡入上浮） ===== */
 .empty {
   text-align: center;
   padding: 100rpx 0;
   color: var(--muted);
   font-size: 28rpx;
+  animation: empty-in 0.3s ease both;
+}
+@keyframes empty-in {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .empty__icon { display: block; width: 110rpx; height: 110rpx; margin: 0 auto 20rpx; }
 
@@ -237,8 +246,10 @@ page {
   font-size: 36rpx;
   font-weight: 600;
   box-shadow: 0 2rpx 8rpx rgba(26, 26, 26, 0.06);
+  transition: transform 0.12s ease;
 }
 .stepper__btn.is-disabled { color: #C9CDD4; }
+.stepper__btn--press { transform: scale(0.88); }
 .stepper__num {
   min-width: 80rpx;
   text-align: center;
@@ -271,7 +282,7 @@ page {
   bottom: calc(180rpx + env(safe-area-inset-bottom));
   width: 128rpx;
   height: 128rpx;
-  background: var(--primary);
+  background: linear-gradient(160deg, #FF6E70 0%, var(--primary) 100%);
   border-radius: 50%;
   display: flex;
   flex-direction: column;

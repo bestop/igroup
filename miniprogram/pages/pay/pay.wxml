@@ -99,7 +99,7 @@
       </block>
     </view>
 
-    <view class="back-tip muted" bindtap="goDetail">← 返回拼单详情</view>
+    <view class="back-tip muted" hover-class="press" bindtap="goDetail">← 返回拼单详情</view>
   </block>
 </block>
 

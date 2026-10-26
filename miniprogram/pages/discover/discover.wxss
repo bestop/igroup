@@ -87,7 +87,7 @@
   background: #fff;
   border-radius: 32rpx;
   padding: 24rpx;
-  box-shadow: 0 6rpx 24rpx rgba(26, 26, 26, 0.04);
+  box-shadow: 0 2rpx 8rpx rgba(26, 26, 26, 0.03), 0 12rpx 32rpx rgba(26, 26, 26, 0.05);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 .grid-item__icon {

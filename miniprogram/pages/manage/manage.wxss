@@ -14,6 +14,9 @@
   padding: 22rpx 12rpx;
   text-align: center;
 }
+/* 数据块随语义上色，与状态标签同语言 */
+.stat--green { background: var(--green-light); }
+.stat--orange { background: var(--orange-light); }
 .stat__num { font-size: 32rpx; font-weight: 700; color: var(--text); }
 .stat__label { font-size: 24rpx; color: var(--muted); margin-top: 8rpx; }
 .stat--green .stat__num { color: var(--green); }
