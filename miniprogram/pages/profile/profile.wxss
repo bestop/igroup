@@ -67,3 +67,7 @@
 .menu-item__arrow { color: #C9CDD4; font-size: 36rpx; }
 
 .about-foot { text-align: center; padding: 30rpx 0 60rpx; }
+
+/* 线性图标适配 */
+.menu-item__icon { width: 36rpx; height: 36rpx; }
+.avatar--plain .avatar__glyph { width: 36rpx; height: 36rpx; }

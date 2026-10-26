@@ -48,3 +48,6 @@
   border-radius: 12rpx;
   padding: 12rpx 16rpx;
 }
+
+/* 线性图标适配 */
+.gb-item__img--placeholder .placeholder-ic { width: 56rpx; height: 56rpx; opacity: 0.9; }

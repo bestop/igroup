@@ -6,7 +6,7 @@
 <!-- 搜索框 -->
 <view class="search-wrap">
   <view class="search-box">
-    <text class="search-box__icon">🔍</text>
+    <image class="search-box__icon" src="/assets/icons/search-gray.png" mode="aspectFit" />
     <input class="search-box__input" placeholder="搜索商品、发起人或拼单类型" value="{{keyword}}" bindinput="onSearch" confirm-type="search" />
   </view>
 </view>
@@ -55,7 +55,7 @@
 </view>
 
 <view wx:elif="{{!loading}}" class="empty">
-  <text class="empty__icon">🍃</text>
+  <image class="empty__icon" src="/assets/icons/leaf-light.png" mode="aspectFit" />
   <view>暂无进行中的拼单</view>
   <view class="muted">发起一个，分享到群里吧</view>
 </view>

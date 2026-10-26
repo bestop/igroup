@@ -23,7 +23,10 @@
   font-size: 30rpx;
   line-height: 1.6;
   margin-top: 16rpx;
+  display: flex;
+  align-items: flex-start;
 }
+.status-tip .ic { flex-shrink: 0; margin-top: 5rpx; }
 .status-tip--orange { background: var(--orange-light); color: var(--orange); }
 .status-tip--green { background: var(--green-light); color: var(--green); }
 .status-tip--blue { background: var(--blue-light); color: var(--blue); }
@@ -87,7 +90,7 @@
   padding: 36rpx 30rpx;
   text-align: center;
 }
-.cash-card__icon { font-size: 72rpx; display: block; margin-bottom: 12rpx; }
+.cash-card__icon { width: 76rpx; height: 76rpx; display: block; margin: 0 auto 12rpx; }
 .cash-card__title { font-size: 32rpx; font-weight: 700; color: var(--blue); margin-bottom: 10rpx; }
 .cash-card .muted { color: #5A8FC4; }
 .cash-desc {

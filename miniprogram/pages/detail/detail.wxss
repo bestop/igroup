@@ -104,3 +104,8 @@
 .bar-join__amount { font-size: 26rpx; color: var(--muted); white-space: nowrap; }
 .bar-join__amount .amount { font-size: 34rpx; }
 .bar-btn { flex: 0 0 260rpx; }
+
+/* 线性图标适配 */
+.detail-img--placeholder .placeholder-ic { width: 64rpx; height: 64rpx; opacity: 0.9; }
+.countdown .ic { vertical-align: -4rpx; }
+.detail-info .ic { margin-top: 6rpx; }

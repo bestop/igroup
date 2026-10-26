@@ -13,7 +13,7 @@
 
   <!-- 收款汇总 -->
   <view class="card">
-    <view class="card-title">💰 收款汇总</view>
+    <view class="card-title"><image class="ic-title" src="/assets/icons/coin-red.png" mode="aspectFit" />收款汇总</view>
     <view class="stat-grid">
       <view class="stat">
         <view class="stat__num">¥{{summary.total_text}}</view>
@@ -32,16 +32,16 @@
         <view class="stat__label">未付款</view>
       </view>
     </view>
-    <view class="muted stat-extra" wx:if="{{summary.cash_count}}">🤝 当面支付 {{summary.cash_count}} 人（提货时收款）</view>
+    <view class="muted stat-extra" wx:if="{{summary.cash_count}}"><image class="ic" src="/assets/icons/cash-blue.png" mode="aspectFit" />当面支付 {{summary.cash_count}} 人（提货时收款）</view>
     <view class="progress stat-progress"><view class="progress__inner" style="width: {{summary.confirmed_pct}}%"></view></view>
     <view class="muted">已确认比例 {{summary.confirmed_pct}}%</view>
   </view>
 
   <!-- 拼单操作 -->
   <view class="card">
-    <view class="card-title">⚙️ 拼单操作</view>
+    <view class="card-title"><image class="ic-title" src="/assets/icons/gear-red.png" mode="aspectFit" />拼单操作</view>
     <block wx:if="{{gb.status === 'open'}}">
-      <button class="btn btn-plain op-btn" bindtap="onEdit">✏️ 编辑拼单</button>
+      <button class="btn btn-plain op-btn" bindtap="onEdit"><image class="ic" src="/assets/icons/edit-gray.png" mode="aspectFit" />编辑拼单</button>
       <button class="btn btn-primary op-btn" bindtap="onClose">提前截单</button>
       <button class="btn btn-plain op-btn op-btn--danger" bindtap="onCancel">取消拼单</button>
     </block>
@@ -54,14 +54,14 @@
       <view class="muted op-tip">已提货 {{summary.picked_count}}/{{summary.neighbor_count}} 人</view>
       <button class="btn btn-plain op-btn" bindtap="onComplete">完成拼单</button>
     </block>
-    <view class="muted op-tip" wx:if="{{gb.status === 'completed'}}">拼单已完成 🎉</view>
+    <view class="muted op-tip" wx:if="{{gb.status === 'completed'}}">拼单已完成 <image class="ic" src="/assets/icons/sparkles-red.png" mode="aspectFit" /></view>
     <view class="muted op-tip" wx:if="{{gb.status === 'cancelled'}}">已取消 · 已付款邻居请线下退款</view>
   </view>
 
   <!-- 参与人与收款管理 -->
   <view class="card">
     <view class="card-title">
-      <text>👥 收款管理（{{summary.neighbor_count}} 位邻居）</text>
+      <view class="row"><image class="ic" src="/assets/icons/users-gray.png" mode="aspectFit" />收款管理（{{summary.neighbor_count}} 位邻居）</view>
       <text class="confirm-all" wx:if="{{summary.pending_count > 0}}" bindtap="onConfirmAll">一键确认全部（{{summary.pending_count}}）</text>
     </view>
     <view class="empty" wx:if="{{!participants.length}}">还没有邻居加入</view>

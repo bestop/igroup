@@ -172,7 +172,19 @@ page {
   color: var(--muted);
   font-size: 28rpx;
 }
-.empty__icon { font-size: 90rpx; display: block; margin-bottom: 20rpx; }
+.empty__icon { display: block; width: 110rpx; height: 110rpx; margin: 0 auto 20rpx; }
+
+/* ===== 线性图标系统（assets/icons，与主色体系配套） ===== */
+/* 卡片标题前置图标：随 .card-title 的 flex 对齐 */
+.card-title .ic-title { width: 34rpx; height: 34rpx; margin-right: 10rpx; }
+/* 行内小图标：文本流内对齐 */
+.ic {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 8rpx;
+  vertical-align: -6rpx;
+  display: inline-block;
+}
 
 /* ===== 头像 ===== */
 .avatar { width: 72rpx; height: 72rpx; border-radius: 50%; background: var(--gray-light); flex-shrink: 0; }

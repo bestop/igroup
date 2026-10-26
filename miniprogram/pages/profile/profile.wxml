@@ -7,7 +7,7 @@
   <view class="row-between">
     <view class="row">
       <image class="avatar" src="{{profile.avatar}}" wx:if="{{profile && profile.avatar}}" mode="aspectFill"></image>
-      <view class="avatar avatar--plain" wx:else>👤</view>
+      <view class="avatar avatar--plain" wx:else><image class="avatar__glyph" src="/assets/icons/user-light.png" mode="aspectFit" /></view>
       <view>
         <view class="profile-name">{{profile ? profile.nickname : ''}}</view>
         <view class="muted">拼单时展示给邻居</view>
@@ -43,22 +43,22 @@
 <!-- 菜单 -->
 <view class="card menu">
   <view class="menu-item" hover-class="press" bindtap="goOrders">
-    <text class="menu-item__icon">📋</text>
+    <image class="menu-item__icon" src="/assets/icons/clipboard-gray.png" mode="aspectFit" />
     <text class="menu-item__text">我的订单</text>
     <text class="menu-item__arrow">›</text>
   </view>
   <view class="menu-item" hover-class="press" bindtap="goIndex">
-    <text class="menu-item__icon">🏠</text>
+    <image class="menu-item__icon" src="/assets/icons/home-gray.png" mode="aspectFit" />
     <text class="menu-item__text">我发起的拼单</text>
     <text class="menu-item__arrow">›</text>
   </view>
   <button class="menu-item menu-item--btn" hover-class="press" open-type="share">
-    <text class="menu-item__icon">📣</text>
+    <image class="menu-item__icon" src="/assets/icons/megaphone-gray.png" mode="aspectFit" />
     <text class="menu-item__text">推荐给邻居</text>
     <text class="menu-item__arrow">›</text>
   </button>
   <view class="menu-item" hover-class="press" bindtap="onAbout">
-    <text class="menu-item__icon">💰</text>
+    <image class="menu-item__icon" src="/assets/icons/coin-gray.png" mode="aspectFit" />
     <text class="menu-item__text">资金说明</text>
     <text class="menu-item__arrow">›</text>
   </view>

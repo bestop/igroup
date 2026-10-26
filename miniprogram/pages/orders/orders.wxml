@@ -4,7 +4,7 @@
 </view>
 
 <view wx:if="{{!orders.length && !loading}}" class="empty">
-  <text class="empty__icon">📋</text>
+  <image class="empty__icon" src="/assets/icons/clipboard-light.png" mode="aspectFit" />
   <view>暂无参与记录</view>
   <view class="muted">去「发现」看看邻居都在拼什么</view>
 </view>
@@ -12,7 +12,7 @@
 <view class="card order" wx:for="{{orders}}" wx:key="pid" hover-class="press">
   <view class="row" data-id="{{item.gb_id}}" bindtap="goDetail">
     <image class="order__img" src="{{item.image_url}}" mode="aspectFill" wx:if="{{item.image_url}}"></image>
-    <view class="order__img order__img--placeholder" wx:else>🛒</view>
+    <view class="order__img order__img--placeholder" wx:else><image class="placeholder-ic" src="/assets/icons/cart-light.png" mode="aspectFit" /></view>
     <view class="order__body">
       <view class="row-between">
         <view class="order__name">{{item.store}} · {{item.product_name}}</view>
@@ -40,7 +40,7 @@
   <view class="row order__actions">
     <button class="btn btn-mini btn-mini-primary" wx:if="{{item.can_pay}}" data-id="{{item.gb_id}}" bindtap="goPay">去付款</button>
     <button class="btn btn-mini btn-mini-green" wx:if="{{item.can_pickup}}" data-pid="{{item.pid}}" bindtap="onConfirmPickup">确认提货</button>
-    <text class="picked-tag" wx:if="{{item.picked_up}}">✅ 已提货</text>
+    <view class="picked-tag" wx:if="{{item.picked_up}}"><image class="ic" src="/assets/icons/check-circle-green.png" mode="aspectFit" />已提货</view>
     <button class="btn btn-mini btn-mini-plain" data-id="{{item.gb_id}}" bindtap="goDetail">查看详情</button>
   </view>
 </view>

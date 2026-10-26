@@ -3,7 +3,7 @@
 <block wx:if="{{gb}}">
   <!-- 未参与 -->
   <view class="card empty" wx:if="{{!p}}">
-    <text class="empty__icon">🙋</text>
+    <image class="empty__icon" src="/assets/icons/user-check-light.png" mode="aspectFit" />
     <view>你还没有参与这个拼单</view>
     <view class="muted">先去详情页选择份数加入吧</view>
   </view>
@@ -15,7 +15,7 @@
 
     <!-- 应付金额明细 -->
     <view class="card">
-      <view class="card-title">💵 应付金额明细</view>
+      <view class="card-title"><image class="ic-title" src="/assets/icons/cash-red.png" mode="aspectFit" />应付金额明细</view>
       <view class="bill-row">
         <text>商品费（{{shares}} × ¥{{perSharePriceText}}）</text>
         <text>¥{{goodsText}}</text>
@@ -50,13 +50,13 @@
         <text class="tag tag--{{payView.color}}">{{payView.label}}</text>
       </view>
       <view class="status-tip status-tip--orange" wx:if="{{p.pay_status === 'paid_pending'}}">
-        ✅ 已标记付款，等待发起人确认收款
+        <image class="ic" src="/assets/icons/check-circle-orange.png" mode="aspectFit" />已标记付款，等待发起人确认收款
       </view>
       <view class="status-tip status-tip--green" wx:if="{{p.pay_status === 'confirmed'}}">
-        🎉 发起人已确认收款，请留意提货通知
+        <image class="ic" src="/assets/icons/sparkles-red.png" mode="aspectFit" />发起人已确认收款，请留意提货通知
       </view>
       <view class="status-tip status-tip--blue" wx:if="{{p.pay_status === 'cash_on_pickup'}}">
-        🤝 提货时请向发起人当面支付 <text class="strong">¥{{totalText}}</text>
+        <image class="ic" src="/assets/icons/cash-blue.png" mode="aspectFit" />提货时请向发起人当面支付 <text class="strong">¥{{totalText}}</text>
       </view>
       <view class="muted status-note" wx:if="{{p.paid_at}}">标记付款时间：{{paidAtText}}</view>
     </view>
@@ -82,7 +82,7 @@
         </view>
         <view class="qr-hint">长按识别或保存图片后扫码支付</view>
         <button class="btn btn-plain qr-save" bindtap="onSaveQr" disabled="{{saving}}">保存收款码到相册</button>
-        <view class="qr-note" wx:if="{{gb.pay_qr_note}}">📢 {{gb.pay_qr_note}}</view>
+        <view class="qr-note" wx:if="{{gb.pay_qr_note}}"><image class="ic" src="/assets/icons/megaphone-orange.png" mode="aspectFit" />{{gb.pay_qr_note}}</view>
         <view class="muted note-label">转账备注（选填）</view>
         <input class="input" placeholder="如微信昵称 / 尾号" value="{{paymentNote}}" bindinput="onNote" maxlength="40" />
         <view class="muted pay-foot-hint">转账后点击下方「我已付款」</view>
@@ -91,7 +91,7 @@
       <!-- 方式二：当面支付 -->
       <block wx:if="{{activeMethod === 'cash' && gb.pay_cash_enabled}}">
         <view class="cash-card">
-          <text class="cash-card__icon">🤝</text>
+          <image class="cash-card__icon" src="/assets/icons/cash-blue.png" mode="aspectFit" />
           <view class="cash-card__title">提货时当面支付现金 / 红包</view>
           <view class="muted">无需现在付款，提货时把 ¥{{totalText}} 交给发起人即可</view>
         </view>

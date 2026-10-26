@@ -1,5 +1,5 @@
 <view class="card">
-  <view class="card-title">👤 团长名片</view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/user-red.png" mode="aspectFit" />团长名片</view>
   <view class="row profile-row">
     <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
       <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
@@ -16,7 +16,7 @@
 </view>
 
 <view class="card">
-  <view class="card-title">🛒 商品信息</view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/cart-red.png" mode="aspectFit" />商品信息</view>
 
   <view class="form-item">
     <view class="form-item__label">商超来源</view>
@@ -70,7 +70,7 @@
 </view>
 
 <view class="card">
-  <view class="card-title">💰 额外费用（可选）</view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/coin-red.png" mode="aspectFit" />额外费用（可选）</view>
 
   <view class="fee-row">
     <view class="fee-row__left">
@@ -102,7 +102,7 @@
 </view>
 
 <view class="card">
-  <view class="card-title">⏰ 拼单安排</view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/clock-red.png" mode="aspectFit" />拼单安排</view>
 
   <view class="form-item form-item--row">
     <view class="form-item--grow">
@@ -131,7 +131,7 @@
 </view>
 
 <view class="card">
-  <view class="card-title">🧧 收款方式 <text class="req">*</text></view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/redpacket-red.png" mode="aspectFit" />收款方式 <text class="req">*</text></view>
   <view class="muted form-item__hint">小程序不经手资金，两种方式可同时开启</view>
 
   <view class="pay-setting">
@@ -163,7 +163,7 @@
 </view>
 
 <view class="card" wx:if="{{preview}}">
-  <view class="card-title">📐 分摊预览</view>
+  <view class="card-title"><image class="ic-title" src="/assets/icons/ruler-red.png" mode="aspectFit" />分摊预览</view>
   <view class="preview-line">总货值 <text class="amount"><text class="amount__rmb">¥</text>{{preview.total_value_text}}</text>，共 <text class="strong">{{preview.total_shares}}</text> {{preview.unit}}</view>
   <view class="muted preview-detail">每份 = 整包 ¥{{preview.package_price_text}} ÷ 每包拆 {{preview.package_shares}} {{preview.unit}} ≈ ¥{{preview.goods_per_share_text}}（四舍五入到分）</view>
   <view class="preview-line" style="margin-top: 14rpx;">邻居每{{preview.unit}}应付 <text class="amount"><text class="amount__rmb">¥</text>{{preview.per_share_text}}</text></view>

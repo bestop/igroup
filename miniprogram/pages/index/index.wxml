@@ -11,13 +11,13 @@
 <!-- 我参与的 -->
 <block wx:if="{{tab === 'joined'}}">
   <view wx:if="{{!joined.length && !loading}}" class="empty">
-    <text class="empty__icon">🧺</text>
+    <image class="empty__icon" src="/assets/icons/basket-light.png" mode="aspectFit" />
     <view>还没有参与的拼单</view>
     <view class="muted">去「发现」看看邻居都在拼什么</view>
   </view>
   <view class="card gb-item" wx:for="{{joined}}" wx:key="pid" hover-class="press" data-id="{{item.gb_id}}" bindtap="goDetail">
     <image class="gb-item__img" src="{{item.image_url}}" mode="aspectFill" wx:if="{{item.image_url}}"></image>
-    <view class="gb-item__img gb-item__img--placeholder" wx:else>🛒</view>
+    <view class="gb-item__img gb-item__img--placeholder" wx:else><image class="placeholder-ic" src="/assets/icons/cart-light.png" mode="aspectFit" /></view>
     <view class="gb-item__body">
       <view class="row-between">
         <view class="gb-item__name">{{item.store}} · {{item.product_name}}</view>
@@ -40,14 +40,14 @@
 <!-- 我发起的 -->
 <block wx:if="{{tab === 'created'}}">
   <view wx:if="{{!created.length && !loading}}" class="empty">
-    <text class="empty__icon">📣</text>
+    <image class="empty__icon" src="/assets/icons/megaphone-light.png" mode="aspectFit" />
     <view>你还没有发起过拼单</view>
     <view class="muted">点击下方按钮，当一回团长</view>
   </view>
   <view class="card gb-item" wx:for="{{created}}" wx:key="id" hover-class="press">
     <view data-id="{{item.id}}" bindtap="goDetail" class="gb-item__tap">
       <image class="gb-item__img" src="{{item.image_url}}" mode="aspectFill" wx:if="{{item.image_url}}"></image>
-      <view class="gb-item__img gb-item__img--placeholder" wx:else>🛒</view>
+      <view class="gb-item__img gb-item__img--placeholder" wx:else><image class="placeholder-ic" src="/assets/icons/cart-light.png" mode="aspectFit" /></view>
       <view class="gb-item__body">
         <view class="row-between">
           <view class="gb-item__name">{{item.store}} · {{item.product_name}}</view>

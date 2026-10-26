@@ -9,7 +9,7 @@
   <view class="card">
     <view class="row">
       <image class="detail-img" src="{{gb.product_image_url}}" mode="aspectFill" wx:if="{{gb.product_image_url}}"></image>
-      <view class="detail-img detail-img--placeholder" wx:else>🛒</view>
+      <view class="detail-img detail-img--placeholder" wx:else><image class="placeholder-ic" src="/assets/icons/cart-light.png" mode="aspectFit" /></view>
       <view class="detail-body">
         <view class="detail-name">{{gb.store}} · {{gb.product_name}}</view>
         <view class="row detail-tags">
@@ -30,24 +30,24 @@
     </view>
 
     <view class="countdown" wx:if="{{gb.status === 'open'}}">
-      <text class="countdown__label">⏰ 距截单</text>
+      <image class="ic" src="/assets/icons/clock-orange.png" mode="aspectFit" /><text class="countdown__label">距截单</text>
       <text class="countdown__time">{{countdown}}</text>
       <text class="muted">（{{deadlineText}} 截止）</text>
     </view>
 
     <view class="divider"></view>
 
-    <view class="detail-info"><text class="detail-info__label">📍 提货地点</text>{{gb.pickup_location}}</view>
-    <view class="detail-info" wx:if="{{gb.package_price}}"><text class="detail-info__label">📦 整包</text>¥{{packagePriceText}}/包 × {{gb.total_packages}} 包 · 每包拆 {{gb.package_shares}} {{gb.unit}}</view>
-    <view class="detail-info" wx:if="{{gb.initiator_shares > 0}}"><text class="detail-info__label">🧑‍🍳 自留</text>团长自留 {{gb.initiator_shares}} {{gb.unit}}</view>
-    <view class="detail-info" wx:if="{{gb.remark}}"><text class="detail-info__label">📝 备注</text>{{gb.remark}}</view>
-    <view class="detail-info" wx:if="{{gb.fee_bearer === 'split' && (gb.fee_express_per_share || gb.fee_package_per_share)}}"><text class="detail-info__label">💰 费用</text>快递分摊 ¥{{feeExpressText}} · 包装分摊 ¥{{feePackageText}}</view>
-    <view class="detail-info" wx:elif="{{gb.fee_bearer === 'initiator'}}"><text class="detail-info__label">💰 费用</text>快递/包装费由发起人承担</view>
+    <view class="detail-info"><image class="ic" src="/assets/icons/map-pin-gray.png" mode="aspectFit" /><text class="detail-info__label">提货地点</text>{{gb.pickup_location}}</view>
+    <view class="detail-info" wx:if="{{gb.package_price}}"><image class="ic" src="/assets/icons/package-gray.png" mode="aspectFit" /><text class="detail-info__label">整包</text>¥{{packagePriceText}}/包 × {{gb.total_packages}} 包 · 每包拆 {{gb.package_shares}} {{gb.unit}}</view>
+    <view class="detail-info" wx:if="{{gb.initiator_shares > 0}}"><image class="ic" src="/assets/icons/bookmark-gray.png" mode="aspectFit" /><text class="detail-info__label">自留</text>团长自留 {{gb.initiator_shares}} {{gb.unit}}</view>
+    <view class="detail-info" wx:if="{{gb.remark}}"><image class="ic" src="/assets/icons/note-gray.png" mode="aspectFit" /><text class="detail-info__label">备注</text>{{gb.remark}}</view>
+    <view class="detail-info" wx:if="{{gb.fee_bearer === 'split' && (gb.fee_express_per_share || gb.fee_package_per_share)}}"><image class="ic" src="/assets/icons/coin-gray.png" mode="aspectFit" /><text class="detail-info__label">费用</text>快递分摊 ¥{{feeExpressText}} · 包装分摊 ¥{{feePackageText}}</view>
+    <view class="detail-info" wx:elif="{{gb.fee_bearer === 'initiator'}}"><image class="ic" src="/assets/icons/coin-gray.png" mode="aspectFit" /><text class="detail-info__label">费用</text>快递/包装费由发起人承担</view>
   </view>
 
   <!-- 我的参与 -->
   <view class="card" wx:if="{{myParticipant}}">
-    <view class="card-title">🧾 我的参与</view>
+    <view class="card-title"><image class="ic-title" src="/assets/icons/receipt-red.png" mode="aspectFit" />我的参与</view>
     <view class="row-between">
       <view>选了 <text class="strong">{{myParticipant.shares}}</text> {{gb.unit}}，应付 <text class="amount"><text class="amount__rmb">¥</text>{{myAmountText}}</text></view>
       <text class="tag tag--{{myPayView.color}}">{{myPayView.label}}</text>
@@ -60,7 +60,7 @@
 
   <!-- 加入拼单：填写昵称（份数与提交在底部悬浮栏） -->
   <view class="card" wx:if="{{canJoin}}">
-    <view class="card-title">🙋 加入拼单</view>
+    <view class="card-title"><image class="ic-title" src="/assets/icons/user-plus-red.png" mode="aspectFit" />加入拼单</view>
     <view class="row">
       <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
         <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
@@ -80,7 +80,7 @@
 
   <!-- 参与名单 -->
   <view class="card">
-    <view class="card-title">👥 参与名单（{{participants.length}}）</view>
+    <view class="card-title"><image class="ic-title" src="/assets/icons/users-red.png" mode="aspectFit" />参与名单（{{participants.length}}）</view>
     <view class="empty" wx:if="{{!participants.length}}">还没有人参与，分享给邻居吧</view>
     <view class="member" wx:for="{{participants}}" wx:key="_id">
       <image class="avatar" src="{{item.avatar_url}}" wx:if="{{item.avatar_url}}" mode="aspectFill"></image>

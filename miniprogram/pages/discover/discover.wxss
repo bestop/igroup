@@ -125,3 +125,7 @@
 }
 .grid-item__stat { color: var(--muted); font-size: 22rpx; }
 .grid-item__action { color: var(--primary); font-size: 28rpx; font-weight: 600; }
+
+/* 线性图标适配 */
+.search-box__icon { width: 30rpx; height: 30rpx; }
+.empty .empty__icon { opacity: 0.9; }
