@@ -18,7 +18,7 @@
   <block wx:if="{{editing}}">
     <view class="divider"></view>
     <view class="row">
-      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <button class="avatar-btn avatar-btn--sm" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
         <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
         <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
       </button>

@@ -7,14 +7,25 @@
 }
 .profile-name { font-size: 34rpx; font-weight: 700; }
 
+/* 编辑行头像占位：收窄到与名片展示头像一致的 72rpx，把宽度让给昵称输入框 */
+.avatar-btn--sm {
+  width: 72rpx;
+  height: 72rpx;
+  margin-right: 16rpx;
+}
+.avatar-btn--sm .avatar { width: 72rpx; height: 72rpx; }
+.avatar-btn--sm .avatar--empty { font-size: 32rpx; }
+.avatar-btn--sm .avatar--empty text { font-size: 18rpx; }
+
 .input {
   flex: 1;
+  min-width: 0; /* 防止 input 固有宽度把兄弟元素挤出 */
   background: var(--bg);
   border-radius: 14rpx;
   padding: 16rpx 22rpx;
   font-size: 30rpx;
 }
-.save-btn { margin-left: 16rpx; }
+.save-btn { flex-shrink: 0; margin-left: 16rpx; }
 
 .profile-stats {
   display: flex;
