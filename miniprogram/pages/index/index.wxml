@@ -69,5 +69,8 @@
   </view>
 </block>
 
-<view class="fab" hover-class="fab-press" aria-label="发起拼单" bindtap="goCreate"></view>
+<view class="fab" hover-class="fab-press" aria-label="发起拼单" bindtap="goCreate">
+  <view class="fab__plus"></view>
+  <text class="fab__text">发起拼单</text>
+</view>
 <view class="page-pad-bottom"></view>
