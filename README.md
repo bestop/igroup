@@ -35,10 +35,19 @@
 │       ├── orders/              # 我的订单（参与记录、确认提货）
 │       └── manage/              # 团长管理（收款汇总、截单、购买、提货、取消）
 └── cloudfunctions/
-    └── groupbuy/                # 唯一云函数：全部业务 + 定时截单
-        ├── index.js
+    └── groupbuy/                # 唯一云函数：全部业务 + 定时截单（按域拆分模块）
+        ├── index.js             # 入口：action 路由 + 定时器分发
+        ├── config.js            # 订阅消息模板 / 集合清单
         ├── config.json          # 定时触发器 + 订阅消息 openapi 权限
-        └── package.json
+        ├── timer.js             # 定时截单
+        ├── INDEXES.md           # 数据库索引创建指引（建议按需在控制台创建）
+        ├── lib/                 # 共享层：db 访问 / 守卫 / 通知 / 用户 / 入参规范化
+        └── actions/             # 按域拆分的 23 个 action
+            ├── profile.js       # 用户域：名片获取/更新
+            ├── groupbuy.js      # 拼单域：创建/编辑/详情/状态流转
+            ├── participation.js # 参与域：加入(事务防超卖)/移除/提货
+            ├── payment.js       # 收款域：选方式/标记/确认/驳回/提醒
+            └── lists.js         # 列表域：我的订单/我发起的/发现页
 ```
 
 ## 快速开始
@@ -54,7 +63,7 @@
 1. 小程序后台 → 功能 → 订阅消息 → 申请"一次性订阅"模板，拿到模板 ID。
 2. 填入两处：
    - `miniprogram/utils/subscribe.js` 的 `SUBSCRIBE_TMPL_IDS`（用于引导用户授权）
-   - `cloudfunctions/groupbuy/index.js` 顶部 `TEMPLATES`（payRemind / purchased / arrival / cancel 四类）
+   - `cloudfunctions/groupbuy/config.js` 的 `TEMPLATES`（payRemind / purchased / arrival / cancel 四类）
 3. 模板字段按 `thing1`（拼单商品名）、`thing2`（状态说明）对齐，如你的模板字段不同，改 `buildSubData()` 即可。
 4. 体验版调试时把 `MINI_STATE` 改为 `'trial'`。
 
