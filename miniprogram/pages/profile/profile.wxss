@@ -32,8 +32,9 @@
    （与 detail 页加入拼单表单同款已验证模式） */
 .input-wrap { flex: 1 1 0; min-width: 0; overflow: hidden; }
 .input {
-  width: 100%;
-  box-sizing: border-box;
+  /* 不设 width/box-sizing：小程序 input UA 默认 height:1.4rem(≈52.5rpx)，
+     border-box 会把上下 padding 也压进 1.4rem，内容区不够裁切文字；
+     保持 content-box（与 detail 页表单一致），块级特性自动占满包裹层 */
   background: var(--bg);
   border-radius: 14rpx;
   padding: 16rpx 22rpx;
