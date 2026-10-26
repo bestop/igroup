@@ -76,7 +76,31 @@
 }
 .menu-item::after { border: none; }
 .menu-item:last-child { border-bottom: none; }
-.menu-item--btn { font-weight: normal; color: var(--text); }
+/* 宿主按钮内唯一子节点就是 .menu-item，会被上面的 :last-child 命中而丢失分隔线，补回 */
+.menu-host .menu-item:last-child { border-bottom: 2rpx solid var(--line); }
+
+/* 「推荐给邻居」行：button 仅作透明宿主承担 open-type="share"，
+   行布局由内部 .menu-item view 渲染，与其它菜单行完全同构。
+   选择器用 button.menu-host 并对 margin/padding 加 !important：
+   真机 UA 可能以 button[open-type]（特异度 0-1-1）注入默认样式，
+   普通类选择器（0-1-0）压不住——这正是真机整行左右错位的根因；
+   字号/行高/对齐即使漏到宿主，内部 view 也已显式声明，不影响行内布局 */
+button.menu-host {
+  display: block;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 30rpx;
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: left;
+  box-sizing: border-box;
+}
+button.menu-host::after { border: none; }
 .menu-item__icon { font-size: 36rpx; margin-right: 20rpx; }
 .menu-item__text { flex: 1; }
 .menu-item__arrow { color: #C9CDD4; font-size: 36rpx; }

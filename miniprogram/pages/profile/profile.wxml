@@ -51,13 +51,18 @@
   </view>
   <view class="menu-item" hover-class="press" bindtap="goIndex">
     <image class="menu-item__icon" src="/assets/icons/home-gray.png" mode="aspectFit" />
-    <text class="menu-item__text">我发起的拼单</text>
+    <text class="menu-item__text">我的拼单</text>
     <text class="menu-item__arrow">›</text>
   </view>
-  <button class="menu-item menu-item--btn" hover-class="press" open-type="share">
-    <image class="menu-item__icon" src="/assets/icons/megaphone-gray.png" mode="aspectFit" />
-    <text class="menu-item__text">推荐给邻居</text>
-    <text class="menu-item__arrow">›</text>
+  <!-- open-type="share" 必须用 button：button 只做透明宿主，
+       行布局交给内部 .menu-item，与相邻菜单行完全同构，
+       规避真机 button UA 默认左右内边距/字号/行高造成的左右错位 -->
+  <button class="menu-host" hover-class="press" open-type="share">
+    <view class="menu-item">
+      <image class="menu-item__icon" src="/assets/icons/megaphone-gray.png" mode="aspectFit" />
+      <text class="menu-item__text">推荐给邻居</text>
+      <text class="menu-item__arrow">›</text>
+    </view>
   </button>
   <view class="menu-item" hover-class="press" bindtap="onAbout">
     <image class="menu-item__icon" src="/assets/icons/coin-gray.png" mode="aspectFit" />
