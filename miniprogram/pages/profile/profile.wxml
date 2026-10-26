@@ -23,9 +23,9 @@
         <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
       </button>
       <view class="input-wrap">
-        <input class="input" type="nickname" placeholder="填写昵称" value="{{nickname}}" bindinput="onNickname" />
+        <input class="input" type="nickname" maxlength="20" placeholder="填写昵称" value="{{nickname}}" bindinput="onNickname" />
       </view>
-      <button class="btn btn-mini btn-mini-primary save-btn" bindtap="saveProfile" disabled="{{saving}}">保存</button>
+      <button class="btn btn-mini btn-mini-primary save-btn" bindtap="saveProfile" disabled="{{saving || uploading}}">保存</button>
     </view>
   </block>
 

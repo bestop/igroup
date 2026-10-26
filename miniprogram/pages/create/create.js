@@ -39,6 +39,9 @@ Page({
     nickname: '',
     avatar: '',
     avatarFileID: '',
+    avatarUploading: false,
+    productUploading: false,
+    qrUploading: false,
     todayStr: '',
     editId: '',
     editing: false,
@@ -150,11 +153,12 @@ Page({
 
   onChooseAvatar(e) {
     const temp = e.detail.avatarUrl
+    this.setData({ avatar: temp, avatarUploading: true })
     util.uploadImage(temp, 'avatars').then(fileID => {
-      this.setData({ avatar: temp, avatarFileID: fileID })
+      this.setData({ avatar: temp, avatarFileID: fileID, avatarUploading: false })
     }).catch(() => {
-      this.setData({ avatar: temp, avatarFileID: '' })
-      util.showError('头像上传失败，可继续发布')
+      this.setData({ avatar: temp, avatarFileID: '', avatarUploading: false })
+      util.showError('头像上传失败，可重选或继续发布')
     })
   },
 
@@ -165,10 +169,13 @@ Page({
       sourceType: ['album', 'camera'],
       success: res => {
         const temp = res.tempFiles[0].tempFilePath
-        this.setData({ productImage: temp, productImageID: '' })
+        this.setData({ productImage: temp, productImageID: '', productUploading: true })
         util.uploadImage(temp, 'products').then(fileID => {
-          this.setData({ productImageID: fileID })
-        }).catch(() => util.showError('图片上传失败，请重试'))
+          this.setData({ productImageID: fileID, productUploading: false })
+        }).catch(() => {
+          this.setData({ productUploading: false })
+          util.showError('商品图片上传失败，请重新选择')
+        })
       }
     })
   },
@@ -180,10 +187,13 @@ Page({
       sourceType: ['album', 'camera'],
       success: res => {
         const temp = res.tempFiles[0].tempFilePath
-        this.setData({ qrImage: temp, qrFileID: '' })
+        this.setData({ qrImage: temp, qrFileID: '', qrUploading: true })
         util.uploadImage(temp, 'qrcodes').then(fileID => {
-          this.setData({ qrFileID: fileID })
-        }).catch(() => util.showError('收款码上传失败，请重试'))
+          this.setData({ qrFileID: fileID, qrUploading: false })
+        }).catch(() => {
+          this.setData({ qrUploading: false })
+          util.showError('收款码上传失败，请重新选择')
+        })
       }
     })
   },
@@ -237,7 +247,8 @@ Page({
     if (!store) return util.showError('请填写商超名称')
 
     if (!d.productName.trim()) return util.showError('请填写商品名称')
-    if (!d.productImageID && d.productImage) return util.showError('商品图片上传中，请稍候')
+    if (d.productUploading) return util.showError('商品图片上传中，请稍候')
+    if (d.productImage && !d.productImageID) return util.showError('商品图片上传失败，请重新选择')
 
     const packagePriceFen = util.yuanStrToFen(d.packagePriceYuan)
     if (packagePriceFen <= 0) return util.showError('请填写正确的整包价格')
@@ -261,7 +272,9 @@ Page({
       return util.showError('请填写包装费金额')
     }
     if (!d.qrEnabled && !d.cashEnabled) return util.showError('至少开启一种收款方式')
+    if (d.qrEnabled && d.qrUploading) return util.showError('收款码上传中，请稍候')
     if (d.qrEnabled && !d.qrFileID) return util.showError('请上传微信收款码图片')
+    if (d.avatarUploading) return util.showError('头像上传中，请稍候')
     if (!d.nickname.trim()) return util.showError('请填写你的昵称，方便邻居认识你')
 
     const payload = {

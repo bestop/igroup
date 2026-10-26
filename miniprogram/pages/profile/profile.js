@@ -10,7 +10,13 @@ Page({
     avatarFileID: '',
     joinedCount: 0,
     createdCount: 0,
-    saving: false
+    saving: false,
+    uploading: false
+  },
+
+  onLoad() {
+    // 本次会话上传过的头像 fileID，用于孤儿文件回收
+    this._uploadHistory = []
   },
 
   onShow() {
@@ -39,8 +45,20 @@ Page({
       })
       wx.setStorageSync('profile', profileView)
       getApp().globalData.profile = profileView
+      this.cleanupOrphanAvatars(profileView.avatar || '')
     } catch (e) {
       util.showError(e.message)
+    }
+  },
+
+  /** 回收本次会话上传但未被采用的头像文件。
+   *  只动会话内新传的：服务端正在引用的历史头像不碰——
+   *  拼单文档会快照 initiator_avatar，删了会导致历史拼单名片图失效 */
+  cleanupOrphanAvatars(currentFileID) {
+    const stale = (this._uploadHistory || []).filter(f => f && f !== currentFileID)
+    this._uploadHistory = []
+    if (stale.length) {
+      util.p(wx.cloud.deleteFile)({ fileList: stale }).catch(() => {})
     }
   },
 
@@ -52,16 +70,20 @@ Page({
 
   onChooseAvatar(e) {
     const temp = e.detail.avatarUrl
+    this.setData({ avatar: temp, uploading: true })
     util.uploadImage(temp, 'avatars').then(fileID => {
-      this.setData({ avatar: temp, avatarFileID: fileID })
+      if (this._uploadHistory) this._uploadHistory.push(fileID)
+      this.setData({ avatar: temp, avatarFileID: fileID, uploading: false })
     }).catch(() => {
-      this.setData({ avatar: temp, avatarFileID: '' })
-      util.showError('头像上传失败，请重试')
+      // 上传失败不落库：avatarFileID 置空，保存时服务端跳过空头像（昵称照常保存）
+      this.setData({ avatar: temp, avatarFileID: '', uploading: false })
+      util.showError('头像上传失败，可重选或仅保存昵称')
     })
   },
 
   async saveProfile() {
     if (this.data.saving) return
+    if (this.data.uploading) return util.showError('头像上传中，请稍候')
     if (!this.data.nickname.trim()) return util.showError('昵称不能为空')
     this.setData({ saving: true })
     try {
