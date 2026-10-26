@@ -60,5 +60,5 @@
   <view class="muted">发起一个，分享到群里吧</view>
 </view>
 
-<view class="fab" bindtap="goCreate">＋ 发起拼单</view>
+<view class="fab" hover-class="fab-press" aria-label="发起拼单" bindtap="goCreate"></view>
 <view class="page-pad-bottom"></view>

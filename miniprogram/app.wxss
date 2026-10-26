@@ -264,17 +264,33 @@ page {
 /* 页面底部留白（含 TabBar/悬浮栏高度） */
 .page-pad-bottom { padding-bottom: 200rpx; }
 
-/* ===== 悬浮发起按钮 ===== */
+/* ===== 悬浮发起按钮（圆形 FAB）===== */
 .fab {
   position: fixed;
   right: 30rpx;
   bottom: calc(180rpx + env(safe-area-inset-bottom));
+  width: 112rpx;
+  height: 112rpx;
   background: var(--primary);
-  color: #fff;
-  font-size: 32rpx;
-  font-weight: 600;
-  padding: 26rpx 40rpx;
-  border-radius: 60rpx;
+  border-radius: 50%;
   box-shadow: 0 10rpx 24rpx rgba(255, 77, 79, 0.35);
   z-index: 20;
+}
+/* 加号用双横条绘制：比字体＋更锐利，且不受基线/字体渲染差异影响 */
+.fab::before,
+.fab::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 3rpx;
+}
+.fab::before { width: 44rpx; height: 6rpx; }
+.fab::after { width: 6rpx; height: 44rpx; }
+/* 独立按压态：.press 的背景变浅在红底上会闪白，改为缩放 + 阴影收敛 */
+.fab-press {
+  transform: scale(0.94);
+  box-shadow: 0 6rpx 16rpx rgba(255, 77, 79, 0.3);
 }
