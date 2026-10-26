@@ -7,25 +7,39 @@
 }
 .profile-name { font-size: 34rpx; font-weight: 700; }
 
-/* 编辑行头像占位：收窄到与名片展示头像一致的 72rpx，把宽度让给昵称输入框 */
+/* 名片展示行：长昵称省略，不把右侧「修改」按钮挤出卡片 */
+.profile-head { flex: 1 1 0; min-width: 0; }
+.profile-head__meta { flex: 1 1 0; min-width: 0; }
+.profile-name,
+.profile-head__meta .muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 编辑行头像：定宽 72rpx，min/max 双保险，防范 open-type 按钮 UA 默认宽度 */
 .avatar-btn--sm {
+  flex: 0 0 auto;
   width: 72rpx;
+  min-width: 72rpx;
+  max-width: 72rpx;
   height: 72rpx;
-  margin-right: 16rpx;
+  margin: 0 16rpx 0 0;
+  box-sizing: border-box;
 }
 .avatar-btn--sm .avatar { width: 72rpx; height: 72rpx; }
 .avatar-btn--sm .avatar--empty { font-size: 32rpx; }
 .avatar-btn--sm .avatar--empty text { font-size: 18rpx; }
 
+/* 弹性收缩由普通 view 包裹层承担：原生 input 不参与 flex 分账，
+   规避部分真机上 input 固有宽度不收缩导致整行溢出的怪癖
+   （与 detail 页加入拼单表单同款已验证模式） */
+.input-wrap { flex: 1 1 0; min-width: 0; overflow: hidden; }
 .input {
-  flex: 1;
-  min-width: 0; /* 防止 input 固有宽度把兄弟元素挤出 */
+  width: 100%;
+  box-sizing: border-box;
   background: var(--bg);
   border-radius: 14rpx;
   padding: 16rpx 22rpx;
   font-size: 30rpx;
 }
-.save-btn { flex-shrink: 0; margin-left: 16rpx; }
+.save-btn { flex: 0 0 auto; margin-left: 16rpx; white-space: nowrap; box-sizing: border-box; }
 
 .profile-stats {
   display: flex;

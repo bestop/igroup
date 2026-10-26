@@ -5,10 +5,10 @@
 <!-- 名片 -->
 <view class="card">
   <view class="row-between">
-    <view class="row">
+    <view class="row profile-head">
       <image class="avatar" src="{{profile.avatar}}" wx:if="{{profile && profile.avatar}}" mode="aspectFill"></image>
       <view class="avatar avatar--plain" wx:else><image class="avatar__glyph" src="/assets/icons/user-light.png" mode="aspectFit" /></view>
-      <view>
+      <view class="profile-head__meta">
         <view class="profile-name">{{profile ? profile.nickname : ''}}</view>
         <view class="muted">拼单时展示给邻居</view>
       </view>
@@ -22,7 +22,9 @@
         <image class="avatar" src="{{avatar}}" wx:if="{{avatar}}" mode="aspectFill"></image>
         <view class="avatar avatar--empty" wx:else>＋<text>头像</text></view>
       </button>
-      <input class="input" type="nickname" placeholder="填写昵称" value="{{nickname}}" bindinput="onNickname" />
+      <view class="input-wrap">
+        <input class="input" type="nickname" placeholder="填写昵称" value="{{nickname}}" bindinput="onNickname" />
+      </view>
       <button class="btn btn-mini btn-mini-primary save-btn" bindtap="saveProfile" disabled="{{saving}}">保存</button>
     </view>
   </block>
